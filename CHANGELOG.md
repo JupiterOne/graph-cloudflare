@@ -8,8 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
-## 0.1.2 - 2020-05-15
+## 0.1.0 - 2020-05-18
 
-### Fixed
+### Added
 
-- `Account` entity created from properties not found on `instance.config`.
+- Initial release.
