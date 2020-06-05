@@ -1,7 +1,11 @@
-import { createMockStepExecutionContext } from '@jupiterone/integration-sdk/testing';
+import {
+  createMockStepExecutionContext,
+  MockIntegrationStepExecutionContext,
+} from '@jupiterone/integration-sdk-testing';
+import { CloudflareIntegrationConfig } from '../src/types';
 
-export function createStepContext(): ReturnType<
-  typeof createMockStepExecutionContext
+export function createStepContext(): MockIntegrationStepExecutionContext<
+  CloudflareIntegrationConfig
 > {
   return createMockStepExecutionContext({
     instanceConfig: {

@@ -1,5 +1,6 @@
-import { IntegrationInstance } from '@jupiterone/integration-sdk';
+import { IntegrationInstance } from '@jupiterone/integration-sdk-core';
 import { ServicesClient } from './ServicesClient';
+import { CloudflareIntegrationConfig } from '../types';
 
 export * from './types';
 
@@ -8,7 +9,7 @@ export * from './types';
  * api key.
  */
 export function createServicesClient(
-  instance: IntegrationInstance,
+  instance: IntegrationInstance<CloudflareIntegrationConfig>,
 ): ServicesClient {
   const { apiToken } = instance.config;
 

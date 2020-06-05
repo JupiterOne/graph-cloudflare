@@ -35,7 +35,7 @@ export class ServicesClient {
     return this.iterateAll(`accounts/${accountId}/roles`);
   }
 
-  listZones(): Promise<object[]> {
+  listZones(): Promise<any[]> {
     return this.iterateAll('zones');
   }
 
@@ -44,7 +44,7 @@ export class ServicesClient {
   }
 
   async iterateAll<T = object[]>(url: string): Promise<T> {
-    const data = [];
+    const data: any[] = [];
     const limit = 500;
     let total = 0;
     let page = 1;
@@ -55,7 +55,7 @@ export class ServicesClient {
       });
       total = response.result_info?.total_count || 0;
       page++;
-      if (response.result?.length > 0) {
+      if (response.result && response.result?.length > 0) {
         data.push(...response.result);
       } else {
         break;

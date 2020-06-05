@@ -1,8 +1,8 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+  Relationship,
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import {
@@ -10,15 +10,13 @@ import {
   convertAccountMember,
   convertAccountRole,
 } from '../../converter';
+import { CloudflareIntegrationConfig } from '../../types';
 
-const step: IntegrationStep = {
+const step: IntegrationStep<CloudflareIntegrationConfig> = {
   id: 'fetch-accounts',
   name: 'Fetch Cloudflare Accounts, Members, and Roles',
   types: ['cloudflare_account'],
-  async executionHandler({
-    instance,
-    jobState,
-  }: IntegrationStepExecutionContext) {
+  async executionHandler({ instance, jobState }) {
     const client = createServicesClient(instance);
 
     const accounts = await client.listAccounts();
@@ -53,7 +51,7 @@ const step: IntegrationStep = {
       );
       await jobState.addRelationships(accountRoleRelationships);
 
-      const memberRoleRelationships = [];
+      const memberRoleRelationships: Relationship[] = [];
       memberEntities.forEach((memberEntity) => {
         memberEntity.roles.forEach((role) => {
           memberRoleRelationships.push(
