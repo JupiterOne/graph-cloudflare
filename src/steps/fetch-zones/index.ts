@@ -1,20 +1,17 @@
 import {
   IntegrationStep,
-  IntegrationStepExecutionContext,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import { convertZone, convertRecord } from '../../converter';
+import { CloudflareIntegrationConfig } from '../../types';
 
-const step: IntegrationStep = {
+const step: IntegrationStep<CloudflareIntegrationConfig> = {
   id: 'fetch-zones',
   name: 'Fetch Cloudflare DNS Zones and Records',
   types: ['cloudflare_dns_zone'],
-  async executionHandler({
-    instance,
-    jobState,
-  }: IntegrationStepExecutionContext) {
+  async executionHandler({ instance, jobState }) {
     const client = createServicesClient(instance);
 
     const zones = await client.listZones();

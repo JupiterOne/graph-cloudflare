@@ -1,8 +1,9 @@
-import { createMockExecutionContext } from '@jupiterone/integration-sdk/testing';
+import { createMockExecutionContext } from '@jupiterone/integration-sdk-testing';
 
 import validateInvocation from '../validateInvocation';
 
 import fetchMock from 'jest-fetch-mock';
+import { CloudflareIntegrationConfig } from '../types';
 
 beforeEach(() => {
   fetchMock.doMock();
@@ -11,8 +12,13 @@ beforeEach(() => {
 test('rejects if apiToken is not present', async () => {
   fetchMock.mockResponse('{}');
 
-  const context = createMockExecutionContext();
-  context.instance.config.apiToken = undefined;
+  const context = createMockExecutionContext<CloudflareIntegrationConfig>({
+    instanceConfig: {
+      apiToken: '',
+    },
+  });
+
+  delete context.instance.config.apiToken;
 
   await expect(validateInvocation(context)).rejects.toThrow(
     /Failed to authenticate/,
@@ -27,10 +33,11 @@ test('rejects if unable to hit provider apis', async () => {
     }),
   );
 
-  const context = createMockExecutionContext();
-  context.instance.config = {
-    apiToken: 'test',
-  };
+  const context = createMockExecutionContext<CloudflareIntegrationConfig>({
+    instanceConfig: {
+      apiToken: 'test',
+    },
+  });
 
   await expect(validateInvocation(context)).rejects.toThrow(
     /Failed to authenticate/,
@@ -40,10 +47,11 @@ test('rejects if unable to hit provider apis', async () => {
 test('performs sample api call to ensure api can be hit', async () => {
   fetchMock.mockResponse(JSON.stringify({ result: [] }));
 
-  const context = createMockExecutionContext();
-  context.instance.config = {
-    apiToken: 'test',
-  };
+  const context = createMockExecutionContext<CloudflareIntegrationConfig>({
+    instanceConfig: {
+      apiToken: 'test',
+    },
+  });
 
   await expect(validateInvocation(context)).resolves.toBe(undefined);
 });
