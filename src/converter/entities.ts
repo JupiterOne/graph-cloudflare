@@ -128,6 +128,7 @@ export const convertRecord = (
         _type: 'cloudflare_dns_record',
         _class: ['DomainRecord'],
         displayName: data.name,
+        value: data.content,
         createdOn: getTime(data.created_on),
         modifiedOn: getTime(data.modified_on),
         TTL: data.ttl || 0,
