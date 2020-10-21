@@ -11,38 +11,36 @@ const step: IntegrationStep<CloudflareIntegrationConfig> = {
   id: 'fetch-zones',
   name: 'Fetch Cloudflare DNS Zones and Records',
   types: ['cloudflare_dns_zone'],
-  async executionHandler({ instance, jobState }) {
-    const client = createServicesClient(instance);
+  async executionHandler(context) {
+    const { jobState } = context;
+    const client = createServicesClient(context);
 
-    const zones = await client.listZones();
-    const zoneEntities = zones.map(convertZone);
-    await jobState.addEntities(zoneEntities);
+    await client.iterateZones(async (zone) => {
+      const zoneEntity = convertZone(zone);
+      await jobState.addEntity(zoneEntity);
 
-    const accountZoneRelationships = zoneEntities.map((zoneEntity) =>
-      createIntegrationRelationship({
+      const accountZoneRelationship = createIntegrationRelationship({
         fromKey: `cloudflare_account:${zoneEntity.accountId}`,
         fromType: 'cloudflare_account',
         toKey: zoneEntity._key,
         toType: zoneEntity._type,
         _class: 'HAS',
-      }),
-    );
-    await jobState.addRelationships(accountZoneRelationships);
+      });
+      await jobState.addRelationship(accountZoneRelationship);
 
-    for (const zoneEntity of zoneEntities) {
-      const records = await client.listZoneRecords(zoneEntity.id);
-      const recordEntities = records.map(convertRecord);
-      await jobState.addEntities(recordEntities);
+      await client.iterateZoneRecords(zoneEntity.id, async (zoneRecord) => {
+        const recordEntity = convertRecord(zoneRecord);
+        jobState.addEntity(recordEntity);
 
-      const zoneRecordRelationships = recordEntities.map((recordEntity) =>
-        createIntegrationRelationship({
-          from: zoneEntity,
-          to: recordEntity,
-          _class: 'HAS',
-        }),
-      );
-      await jobState.addRelationships(zoneRecordRelationships);
-    }
+        await jobState.addRelationship(
+          createIntegrationRelationship({
+            from: zoneEntity,
+            to: recordEntity,
+            _class: 'HAS',
+          }),
+        );
+      });
+    });
   },
 };
 

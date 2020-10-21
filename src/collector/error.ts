@@ -1,17 +1,30 @@
 import { Response } from 'node-fetch';
+import { IntegrationProviderAPIError } from '@jupiterone/integration-sdk-core';
 
-export class RetryableError extends Error {
+export class RetryableIntegrationProviderApiError extends IntegrationProviderAPIError {
   retryable = true;
 }
 
-export function retryableRequestError(response: Response): RetryableError {
-  return new RetryableError(
-    `Encountered retryable response from provider (status=${response.status})`,
-  );
+export function retryableRequestError(
+  url: string,
+  response: Response,
+): RetryableIntegrationProviderApiError {
+  return new RetryableIntegrationProviderApiError({
+    cause: response,
+    endpoint: url,
+    status: response.status,
+    statusText: response.statusText,
+  });
 }
 
-export function fatalRequestError(response: Response): Error {
-  return new Error(
-    `Encountered unexpected response from provider (status="${response.status}")`,
-  );
+export function fatalRequestError(
+  url: string,
+  response: Response,
+): IntegrationProviderAPIError {
+  return new IntegrationProviderAPIError({
+    cause: response,
+    endpoint: url,
+    status: response.status,
+    statusText: response.statusText,
+  });
 }

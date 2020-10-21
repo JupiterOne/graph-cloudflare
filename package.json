@@ -31,6 +31,7 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "@cloudflare/types": "^6.6.3",
     "@jupiterone/integration-sdk-core": "^2.2.0",
     "@jupiterone/integration-sdk-dev-tools": "^2.2.0",
     "@jupiterone/integration-sdk-testing": "^2.2.0",

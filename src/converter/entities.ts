@@ -1,12 +1,18 @@
-import { CloudflareObject } from '../collector';
 import {
   createIntegrationEntity,
   getTime,
   convertProperties,
 } from '@jupiterone/integration-sdk-core';
+import {
+  Account,
+  AccountMember,
+  AccountRole,
+  Zone,
+  DNSRecord,
+} from '@cloudflare/types';
 
 export const convertAccount = (
-  data: CloudflareObject,
+  data: Account,
 ): ReturnType<typeof createIntegrationEntity> =>
   createIntegrationEntity({
     entityData: {
@@ -29,7 +35,7 @@ export const convertAccount = (
   });
 
 export const convertAccountMember = (
-  data: CloudflareObject,
+  data: AccountMember,
 ): ReturnType<typeof createIntegrationEntity> =>
   createIntegrationEntity({
     entityData: {
@@ -51,7 +57,6 @@ export const convertAccountMember = (
         email: data.user?.email,
         displayName: data.user?.email as string,
         mfaEnabled: data.user?.two_factor_authentication_enabled,
-        createdOn: getTime(data.created_on),
         status: data.status,
         active: data.status === 'accepted',
         roles: data.roles?.map((role) => role.id),
@@ -68,7 +73,7 @@ export const convertAccountMember = (
   });
 
 export const convertAccountRole = (
-  data: CloudflareObject,
+  data: AccountRole,
 ): ReturnType<typeof createIntegrationEntity> =>
   createIntegrationEntity({
     entityData: {
@@ -87,7 +92,7 @@ export const convertAccountRole = (
   });
 
 export const convertZone = (
-  data: CloudflareObject,
+  data: Zone,
 ): ReturnType<typeof createIntegrationEntity> =>
   createIntegrationEntity({
     entityData: {
@@ -116,7 +121,7 @@ export const convertZone = (
   });
 
 export const convertRecord = (
-  data: CloudflareObject,
+  data: DNSRecord,
 ): ReturnType<typeof createIntegrationEntity> =>
   createIntegrationEntity({
     entityData: {

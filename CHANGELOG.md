@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Use iterators in client; don't hold all entity data in memory
+- Use `@cloudflare/types` typing instead of internal types
+
 ## 0.1.0 - 2020-05-18
 
 ### Added
