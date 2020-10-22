@@ -86,25 +86,23 @@ export class ServicesClient {
         per_page: this.limit.toString(),
       });
       totalPages = response.result_info?.total_pages || 0;
-      if (response.result) {
-        for (const item of response.result) {
-          await iteratee(item);
-        }
-      } else {
-        break;
+
+      if (!response.result) break;
+      for (const item of response.result) {
+        await iteratee(item);
       }
     } while (page < totalPages);
   }
 
   fetch<TCloudflareObject>(
     endpoint: string,
-    queryParams: { [param: string]: string | string[] } = {},
+    queryParams: { page: string; per_page: string },
     request?: Omit<Request, 'url'>,
   ): Promise<APIResponseBody<TCloudflareObject[]>> {
     return retry(
       async () => {
         const qs = new URLSearchParams(queryParams).toString();
-        const url = `${BASE_URL}${endpoint}${qs ? '?' + qs : ''}`;
+        const url = `${BASE_URL}${endpoint}?${qs}`;
         const response = await nodeFetch(url, {
           ...request,
           headers: {
