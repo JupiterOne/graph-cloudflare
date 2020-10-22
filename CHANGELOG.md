@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.4.0 - 2020-10-22
+
 ### Changed
 
 - Changed `cloudflare_account_role|assigned|member` to
