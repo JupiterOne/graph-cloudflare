@@ -1,0 +1,316 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should process account entities 1`] = `
+Array [
+  Object {
+    "_class": Array [
+      "Account",
+    ],
+    "_key": "cloudflare_account:209732935e34e48e396793c87747fb54",
+    "_rawData": Array [
+      Object {
+        "name": "default",
+        "rawData": Object {
+          "created_on": "2020-04-26T01:15:30.497692Z",
+          "id": "209732935e34e48e396793c87747fb54",
+          "legacy_flags": Object {
+            "enterprise_zone_quota": Object {
+              "available": 0,
+              "current": 0,
+              "maximum": 0,
+            },
+          },
+          "name": "My Account",
+          "settings": Object {
+            "access_approval_expiry": null,
+            "enforce_twofactor": false,
+          },
+          "type": "standard",
+        },
+      },
+    ],
+    "_type": "cloudflare_account",
+    "accessApprovalExpiry": null,
+    "accountId": "209732935e34e48e396793c87747fb54",
+    "createdOn": 1587863730497,
+    "displayName": "My Account",
+    "id": "209732935e34e48e396793c87747fb54",
+    "mfaEnabled": undefined,
+    "mfaEnforced": false,
+    "name": "My Account",
+    "type": "standard",
+  },
+  Object {
+    "_class": Array [
+      "AccessRole",
+    ],
+    "_key": "cloudflare_account_role:05784afa30c1afe1440e79d9351c7430",
+    "_rawData": Array [
+      Object {
+        "name": "default",
+        "rawData": Object {
+          "description": "Can access the full account, except for membership management and billing.",
+          "id": "05784afa30c1afe1440e79d9351c7430",
+          "name": "Administrator",
+          "permissions": Object {
+            "access": Object {
+              "edit": true,
+              "read": true,
+            },
+            "analytics": Object {
+              "edit": false,
+              "read": true,
+            },
+            "app": Object {
+              "edit": true,
+              "read": false,
+            },
+            "auditlogs": Object {
+              "edit": false,
+              "read": true,
+            },
+            "billing": Object {
+              "edit": false,
+              "read": true,
+            },
+            "cache_purge": Object {
+              "edit": true,
+              "read": false,
+            },
+            "dns_records": Object {
+              "edit": true,
+              "read": true,
+            },
+            "lb": Object {
+              "edit": true,
+              "read": true,
+            },
+            "legal": Object {
+              "edit": false,
+              "read": true,
+            },
+            "logs": Object {
+              "edit": true,
+              "read": true,
+            },
+            "member": Object {
+              "edit": false,
+              "read": true,
+            },
+            "organization": Object {
+              "edit": true,
+              "read": true,
+            },
+            "ssl": Object {
+              "edit": true,
+              "read": true,
+            },
+            "stream": Object {
+              "edit": true,
+              "read": true,
+            },
+            "subscription": Object {
+              "edit": true,
+              "read": true,
+            },
+            "teams": Object {
+              "edit": true,
+              "read": true,
+            },
+            "waf": Object {
+              "edit": true,
+              "read": true,
+            },
+            "webhooks": Object {
+              "edit": true,
+              "read": true,
+            },
+            "worker": Object {
+              "edit": true,
+              "read": true,
+            },
+            "zone": Object {
+              "edit": true,
+              "read": true,
+            },
+            "zone_settings": Object {
+              "edit": true,
+              "read": true,
+            },
+          },
+        },
+      },
+    ],
+    "_type": "cloudflare_account_role",
+    "createdOn": undefined,
+    "description": "Can access the full account, except for membership management and billing.",
+    "displayName": "Administrator",
+    "id": "05784afa30c1afe1440e79d9351c7430",
+    "name": "Administrator",
+    "roleId": "05784afa30c1afe1440e79d9351c7430",
+  },
+  Object {
+    "_class": Array [
+      "User",
+    ],
+    "_key": "cloudflare_account_member:8024",
+    "_rawData": Array [
+      Object {
+        "name": "default",
+        "rawData": Object {
+          "id": "8024",
+          "roles": Array [
+            Object {
+              "description": "Can edit any Cloudflare setting, make purchases, update billing, and manage memberships. Super Administrators can revoke the access of other Super Administrators.",
+              "id": "f42f953d",
+              "name": "Super Administrator - All Privileges",
+              "permissions": Object {
+                "access": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "analytics": Object {
+                  "edit": false,
+                  "read": true,
+                },
+                "app": Object {
+                  "edit": true,
+                  "read": false,
+                },
+                "auditlogs": Object {
+                  "edit": false,
+                  "read": true,
+                },
+                "billing": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "cache_purge": Object {
+                  "edit": true,
+                  "read": false,
+                },
+                "dns_records": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "lb": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "legal": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "logs": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "member": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "organization": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "ssl": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "stream": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "subscription": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "teams": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "waf": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "webhooks": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "worker": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "zone": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "zone_settings": Object {
+                  "edit": true,
+                  "read": true,
+                },
+              },
+            },
+          ],
+          "status": "accepted",
+          "user": Object {
+            "email": "user@company.com",
+            "first_name": null,
+            "id": "1f2e9956",
+            "last_name": null,
+            "two_factor_authentication_enabled": false,
+          },
+        },
+      },
+    ],
+    "_type": "cloudflare_account_member",
+    "active": true,
+    "admin": true,
+    "createdOn": undefined,
+    "displayName": "user@company.com",
+    "email": "user@company.com",
+    "firstName": null,
+    "id": "1f2e9956",
+    "lastName": null,
+    "membershipId": "8024",
+    "mfaEnabled": false,
+    "name": "",
+    "roles": Array [
+      "f42f953d",
+    ],
+    "status": "accepted",
+    "superAdmin": true,
+    "userId": "1f2e9956",
+    "username": "user@company.com",
+  },
+]
+`;
+
+exports[`should process account entities 2`] = `
+Array [
+  Object {
+    "_class": "HAS",
+    "_fromEntityKey": "cloudflare_account:209732935e34e48e396793c87747fb54",
+    "_key": "cloudflare_account:209732935e34e48e396793c87747fb54|has|cloudflare_account_role:05784afa30c1afe1440e79d9351c7430",
+    "_toEntityKey": "cloudflare_account_role:05784afa30c1afe1440e79d9351c7430",
+    "_type": "cloudflare_account_has_role",
+    "displayName": "HAS",
+  },
+  Object {
+    "_class": "HAS",
+    "_fromEntityKey": "cloudflare_account:209732935e34e48e396793c87747fb54",
+    "_key": "cloudflare_account:209732935e34e48e396793c87747fb54|has|cloudflare_account_member:8024",
+    "_toEntityKey": "cloudflare_account_member:8024",
+    "_type": "cloudflare_account_has_member",
+    "displayName": "HAS",
+  },
+  Object {
+    "_class": "ASSIGNED",
+    "_fromEntityKey": "cloudflare_account_role:f42f953d",
+    "_key": "cloudflare_account_role:f42f953d|assigned|cloudflare_account_member:8024",
+    "_toEntityKey": "cloudflare_account_member:8024",
+    "_type": "cloudflare_account_role_assigned_member",
+    "displayName": "ASSIGNED",
+  },
+]
+`;

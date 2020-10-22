@@ -3,6 +3,7 @@ import { createStepContext } from '../../../../test';
 import { Recording, setupRecording } from '@jupiterone/integration-sdk-testing';
 
 import step from '../index';
+import { Entities } from '../../../constants';
 
 let recording: Recording;
 
@@ -28,10 +29,14 @@ test('should process account entities', async () => {
   const context = createStepContext();
   await step.executionHandler(context);
 
-  expect(context.jobState.collectedEntities).toHaveLength(3);
-  expect(context.jobState.collectedRelationships).toHaveLength(3);
+  const { collectedEntities, collectedRelationships } = context.jobState;
 
-  expect(context.jobState.collectedEntities).toEqual(
+  expect(collectedEntities).toHaveLength(3);
+  expect(collectedEntities).toMatchSnapshot();
+  expect(collectedRelationships).toHaveLength(3);
+  expect(collectedRelationships).toMatchSnapshot();
+
+  expect(collectedEntities).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
         _type: 'cloudflare_account',
@@ -57,4 +62,27 @@ test('should process account entities', async () => {
       }),
     ]),
   );
+
+  const accountEntities = collectedEntities.filter(
+    (e) => e._type === Entities.ACCOUNT._type,
+  );
+  expect(accountEntities).toMatchGraphObjectSchema({
+    _class: Entities.ACCOUNT._class,
+  });
+
+  const memberEntities = collectedEntities.filter(
+    (e) => e._type === Entities.MEMBER._type,
+  );
+  expect(memberEntities).toMatchGraphObjectSchema({
+    _class: Entities.MEMBER._class,
+  });
+
+  const roleEntities = collectedEntities.filter(
+    (e) => e._type === Entities.ROLE._type,
+  );
+  expect(roleEntities).toMatchGraphObjectSchema({
+    _class: Entities.ROLE._class,
+  });
+
+  expect(collectedRelationships).toMatchDirectRelationshipSchema({});
 });
