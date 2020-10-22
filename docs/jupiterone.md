@@ -42,13 +42,13 @@ The following entities are created:
 
 The following relationships are created/mapped:
 
-| Source Entity `_type`     | Relationship `_class` | Target Entity `_type`       |
-| ------------------------- | --------------------- | --------------------------- |
-| `cloudflare_account`      | **HAS**               | `cloudflare_dns_zone`       |
-| `cloudflare_account`      | **HAS**               | `cloudflare_account_member` |
-| `cloudflare_account`      | **HAS**               | `cloudflare_account_role`   |
-| `cloudflare_account_role` | **ASSIGNED**          | `cloudflare_account_member` |
-| `cloudflare_dns_zone`     | **HAS**               | `cloudflare_dns_record`     |
+| Source Entity `_type`       | Relationship `_class` | Target Entity `_type`       |
+| --------------------------- | --------------------- | --------------------------- |
+| `cloudflare_account`        | **HAS**               | `cloudflare_dns_zone`       |
+| `cloudflare_account`        | **HAS**               | `cloudflare_account_member` |
+| `cloudflare_account`        | **HAS**               | `cloudflare_account_role`   |
+| `cloudflare_account_member` | **ASSIGNED**          | `cloudflare_account_role`   |
+| `cloudflare_dns_zone`       | **HAS**               | `cloudflare_dns_record`     |
 
 <!--
 ********************************************************************************

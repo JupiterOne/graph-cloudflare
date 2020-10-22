@@ -306,10 +306,10 @@ Array [
   },
   Object {
     "_class": "ASSIGNED",
-    "_fromEntityKey": "cloudflare_account_role:f42f953d",
-    "_key": "cloudflare_account_role:f42f953d|assigned|cloudflare_account_member:8024",
-    "_toEntityKey": "cloudflare_account_member:8024",
-    "_type": "cloudflare_account_role_assigned_member",
+    "_fromEntityKey": "cloudflare_account_member:8024",
+    "_key": "cloudflare_account_member:8024|assigned|cloudflare_account_role:f42f953d",
+    "_toEntityKey": "cloudflare_account_role:f42f953d",
+    "_type": "cloudflare_account_member_assigned_role",
     "displayName": "ASSIGNED",
   },
 ]

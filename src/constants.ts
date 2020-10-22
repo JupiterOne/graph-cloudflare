@@ -46,11 +46,11 @@ export const Relationships = {
     _class: RelationshipClass.HAS,
     targetType: Entities.ROLE._type,
   },
-  ROLE_ASSIGNED_MEMBER: {
-    _type: 'cloudflare_account_role_assigned_member',
-    sourceType: Entities.ROLE._type,
+  MEMBER_ASSIGNED_ROLE: {
+    _type: 'cloudflare_account_member_assigned_role',
+    sourceType: Entities.MEMBER._type,
     _class: RelationshipClass.ASSIGNED,
-    targetType: Entities.MEMBER._type,
+    targetType: Entities.ROLE._type,
   },
   ACCOUNT_HAS_ZONE: {
     _type: 'cloudflare_account_has_dns_zone',

@@ -20,7 +20,7 @@ const step: IntegrationStep<CloudflareIntegrationConfig> = {
   relationships: [
     Relationships.ACCOUNT_HAS_MEMBER,
     Relationships.ACCOUNT_HAS_ROLE,
-    Relationships.ROLE_ASSIGNED_MEMBER,
+    Relationships.MEMBER_ASSIGNED_ROLE,
   ],
   async executionHandler(context) {
     const { jobState } = context;
@@ -61,13 +61,13 @@ const step: IntegrationStep<CloudflareIntegrationConfig> = {
 
         for (const role of member.roles) {
           const memberRoleRelationship = createDirectRelationship({
-            fromKey: `cloudflare_account_role:${role.id}`,
-            fromType: 'cloudflare_account_role',
-            toKey: memberEntity._key,
-            toType: memberEntity._type,
+            toKey: `cloudflare_account_role:${role.id}`,
+            toType: 'cloudflare_account_role',
+            fromKey: memberEntity._key,
+            fromType: memberEntity._type,
             _class: RelationshipClass.ASSIGNED,
             properties: {
-              _type: Relationships.ROLE_ASSIGNED_MEMBER._type,
+              _type: Relationships.MEMBER_ASSIGNED_ROLE._type,
             },
           });
           await jobState.addRelationship(memberRoleRelationship);

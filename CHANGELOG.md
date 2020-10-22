@@ -10,6 +10,9 @@ and this project adheres to
 
 ### Changed
 
+- Changed `cloudflare_account_role|assigned|member` to
+  `cloudflare_account_member|assigned|role`
+- Upgrade sdk@v3.6.0
 - Use iterators in client; don't hold all entity data in memory
 - Use `@cloudflare/types` typing instead of internal types
 
