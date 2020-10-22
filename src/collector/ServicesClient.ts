@@ -3,14 +3,23 @@ import { retry } from '@lifeomic/attempt';
 import nodeFetch, { Request } from 'node-fetch';
 
 import { retryableRequestError, fatalRequestError } from './error';
-import { CloudflareApiResponse, CloudflareObject } from './types';
 import { URLSearchParams } from 'url';
+import { CloudflareIntegrationConfig } from '../types';
+import {
+  Account,
+  AccountMember,
+  Zone,
+  DNSRecord,
+  APIResponseBody,
+  AccountRole,
+} from '@cloudflare/types';
+import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
 
 const BASE_URL = 'https://api.cloudflare.com/client/v4/';
 
-interface ServicesClientInput {
-  apiToken: string;
-}
+type CloudflareIteratee<T> = (obj: T) => void | Promise<void>;
+
+export const DEFAULT_API_LIMIT = 500;
 
 /**
  * Services Api
@@ -18,82 +27,112 @@ interface ServicesClientInput {
  */
 export class ServicesClient {
   readonly apiToken: string;
+  readonly logger: IntegrationLogger;
+  readonly limit: number;
 
-  constructor(config: ServicesClientInput) {
+  constructor(config: CloudflareIntegrationConfig, logger: IntegrationLogger) {
     this.apiToken = config.apiToken;
+    this.logger = logger;
+    this.limit = DEFAULT_API_LIMIT;
   }
 
-  listAccounts(): Promise<CloudflareObject[]> {
-    return this.iterateAll('accounts');
+  async iterateAccounts(iteratee: CloudflareIteratee<Account>): Promise<void> {
+    await this.iterateAll('accounts', iteratee);
   }
 
-  listAccountMembers(accountId: string): Promise<CloudflareObject[]> {
-    return this.iterateAll(`accounts/${accountId}/members`);
+  async iterateAccountMembers(
+    accountId: string,
+    iteratee: CloudflareIteratee<AccountMember>,
+  ): Promise<void> {
+    await this.iterateAll(`accounts/${accountId}/members`, iteratee);
   }
 
-  listAccountRoles(accountId: string): Promise<CloudflareObject[]> {
-    return this.iterateAll(`accounts/${accountId}/roles`);
+  async iterateAccountRoles(
+    accountId: string,
+    iteratee: CloudflareIteratee<AccountRole>,
+  ): Promise<void> {
+    await this.iterateAll(`accounts/${accountId}/roles`, iteratee);
   }
 
-  listZones(): Promise<any[]> {
-    return this.iterateAll('zones');
+  async iterateZones(iteratee: CloudflareIteratee<Zone>): Promise<void> {
+    await this.iterateAll('zones', iteratee);
   }
 
-  listZoneRecords(zoneId: string): Promise<CloudflareObject[]> {
-    return this.iterateAll(`zones/${zoneId}/dns_records`);
+  async iterateZoneRecords(
+    zoneId: string,
+    iteratee: CloudflareIteratee<DNSRecord>,
+  ): Promise<void> {
+    await this.iterateAll(`zones/${zoneId}/dns_records`, iteratee);
   }
 
-  async iterateAll<T = object[]>(url: string): Promise<T> {
-    const data: any[] = [];
-    const limit = 500;
-    let total = 0;
-    let page = 1;
+  async validateInvocation(): Promise<boolean> {
+    const response = await this.fetch('accounts', {
+      page: '1',
+      per_page: '1',
+    });
+    return response.success;
+  }
+
+  async iterateAll<TCloudflareObject>(
+    endpoint: string,
+    iteratee: CloudflareIteratee<TCloudflareObject>,
+  ): Promise<void> {
+    let page = 0;
+    let totalPages: number;
     do {
-      const response: CloudflareApiResponse = await this.fetch(url, {
-        page: page.toString(),
-        per_page: limit.toString(),
-      });
-      total = response.result_info?.total_count || 0;
       page++;
-      if (response.result && response.result?.length > 0) {
-        data.push(...response.result);
-      } else {
-        break;
+      const response = await this.fetch<TCloudflareObject>(endpoint, {
+        page: page.toString(),
+        per_page: this.limit.toString(),
+      });
+      totalPages = response.result_info?.total_pages || 0;
+
+      if (!response.result) break;
+      for (const item of response.result) {
+        await iteratee(item);
       }
-    } while (page * limit < total);
-    return (data as unknown) as T;
+    } while (page < totalPages);
   }
 
-  fetch<T = object>(
-    url: string,
-    queryParams: { [param: string]: string | string[] } = {},
+  fetch<TCloudflareObject>(
+    endpoint: string,
+    queryParams: { page: string; per_page: string },
     request?: Omit<Request, 'url'>,
-  ): Promise<T> {
+  ): Promise<APIResponseBody<TCloudflareObject[]>> {
     return retry(
       async () => {
         const qs = new URLSearchParams(queryParams).toString();
-        const response = await nodeFetch(
-          `${BASE_URL}${url}${qs ? '?' + qs : ''}`,
-          {
-            ...request,
-            headers: {
-              Authorization: `Bearer ${this.apiToken}`,
-              ...request?.headers,
-            },
+        const url = `${BASE_URL}${endpoint}?${qs}`;
+        const response = await nodeFetch(url, {
+          ...request,
+          headers: {
+            Authorization: `Bearer ${this.apiToken}`,
+            ...request?.headers,
           },
-        );
+        });
 
         /**
          * We are working with a json api, so just return the parsed data.
          */
         if (response.ok) {
-          return response.json() as T;
+          const results = response.json() as APIResponseBody<
+            TCloudflareObject[]
+          >;
+          this.logger.info(
+            {
+              url,
+              success: results.success,
+              resultCount: results.result_info?.count,
+            },
+            'Received response from endpoint',
+          );
+          return results;
         }
 
         if (isRetryableRequest(response)) {
-          throw retryableRequestError(response);
+          throw retryableRequestError(url, response);
         } else {
-          throw fatalRequestError(response);
+          throw fatalRequestError(url, response);
         }
       },
       {

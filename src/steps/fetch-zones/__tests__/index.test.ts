@@ -3,6 +3,7 @@ import { createStepContext } from '../../../../test';
 import { Recording, setupRecording } from '@jupiterone/integration-sdk-testing';
 
 import step from '../index';
+import { Entities } from '../../../constants';
 
 let recording: Recording;
 
@@ -28,10 +29,14 @@ test('should process zone entities', async () => {
   const context = createStepContext();
   await step.executionHandler(context);
 
-  expect(context.jobState.collectedEntities).toHaveLength(27);
-  expect(context.jobState.collectedRelationships).toHaveLength(27);
+  const { collectedEntities, collectedRelationships } = context.jobState;
 
-  expect(context.jobState.collectedEntities).toEqual(
+  expect(collectedEntities).toHaveLength(27);
+  expect(collectedEntities).toMatchSnapshot();
+  expect(collectedRelationships).toHaveLength(27);
+  expect(collectedRelationships).toMatchSnapshot();
+
+  expect(collectedEntities).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
         _type: 'cloudflare_dns_zone',
@@ -59,4 +64,20 @@ test('should process zone entities', async () => {
       }),
     ]),
   );
+
+  const zoneEntities = collectedEntities.filter(
+    (e) => e._type === Entities.DNS_ZONE._type,
+  );
+  expect(zoneEntities).toMatchGraphObjectSchema({
+    _class: Entities.DNS_ZONE._class,
+  });
+
+  const recordEntities = collectedEntities.filter(
+    (e) => e._type === Entities.DNS_RECORD._type,
+  );
+  expect(recordEntities).toMatchGraphObjectSchema({
+    _class: Entities.DNS_RECORD._class,
+  });
+
+  expect(collectedRelationships).toMatchDirectRelationshipSchema({});
 });

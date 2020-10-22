@@ -1,6 +1,6 @@
 import {
   IntegrationExecutionContext,
-  IntegrationInstance,
+  IntegrationValidationError,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from './collector';
@@ -16,21 +16,23 @@ export default async function validateInvocation(
     'Validating integration config...',
   );
 
-  if (await isConfigurationValid(context.instance)) {
+  if (await isConfigurationValid(context)) {
     context.logger.info('Integration instance is valid!');
   } else {
-    throw new Error('Failed to authenticate with provided credentials');
+    throw new IntegrationValidationError(
+      'Failed to authenticate with provided credentials',
+    );
   }
 }
 
 async function isConfigurationValid(
-  instance: IntegrationInstance<CloudflareIntegrationConfig>,
+  context: IntegrationExecutionContext<CloudflareIntegrationConfig>,
 ): Promise<boolean> {
   // perform test api call. This will fail if we do not have access.
   try {
-    const client = createServicesClient(instance);
-    await client.listAccounts();
-    return true;
+    const client = createServicesClient(context);
+    const response = await client.validateInvocation();
+    return response;
   } catch (err) {
     return false;
   }

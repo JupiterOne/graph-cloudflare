@@ -1,48 +1,59 @@
 import {
   IntegrationStep,
-  createIntegrationRelationship,
+  createDirectRelationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import { convertZone, convertRecord } from '../../converter';
 import { CloudflareIntegrationConfig } from '../../types';
+import { Relationships, Entities, Steps } from '../../constants';
 
 const step: IntegrationStep<CloudflareIntegrationConfig> = {
-  id: 'fetch-zones',
+  id: Steps.ZONES,
   name: 'Fetch Cloudflare DNS Zones and Records',
-  types: ['cloudflare_dns_zone'],
-  async executionHandler({ instance, jobState }) {
-    const client = createServicesClient(instance);
+  entities: [Entities.DNS_ZONE, Entities.DNS_RECORD],
+  relationships: [
+    Relationships.ACCOUNT_HAS_ZONE,
+    Relationships.ZONE_HAS_RECORD,
+  ],
+  dependsOn: [Steps.ACCOUNT],
+  async executionHandler(context) {
+    const { jobState } = context;
+    const client = createServicesClient(context);
 
-    const zones = await client.listZones();
-    const zoneEntities = zones.map(convertZone);
-    await jobState.addEntities(zoneEntities);
+    await client.iterateZones(async (zone) => {
+      const zoneEntity = convertZone(zone);
+      await jobState.addEntity(zoneEntity);
 
-    const accountZoneRelationships = zoneEntities.map((zoneEntity) =>
-      createIntegrationRelationship({
+      const accountZoneRelationship = createDirectRelationship({
         fromKey: `cloudflare_account:${zoneEntity.accountId}`,
         fromType: 'cloudflare_account',
         toKey: zoneEntity._key,
         toType: zoneEntity._type,
-        _class: 'HAS',
-      }),
-    );
-    await jobState.addRelationships(accountZoneRelationships);
+        _class: RelationshipClass.HAS,
+        properties: {
+          _type: Relationships.ACCOUNT_HAS_ZONE._type,
+        },
+      });
+      await jobState.addRelationship(accountZoneRelationship);
 
-    for (const zoneEntity of zoneEntities) {
-      const records = await client.listZoneRecords(zoneEntity.id);
-      const recordEntities = records.map(convertRecord);
-      await jobState.addEntities(recordEntities);
+      await client.iterateZoneRecords(zoneEntity.id, async (zoneRecord) => {
+        const recordEntity = convertRecord(zoneRecord);
+        await jobState.addEntity(recordEntity);
 
-      const zoneRecordRelationships = recordEntities.map((recordEntity) =>
-        createIntegrationRelationship({
-          from: zoneEntity,
-          to: recordEntity,
-          _class: 'HAS',
-        }),
-      );
-      await jobState.addRelationships(zoneRecordRelationships);
-    }
+        await jobState.addRelationship(
+          createDirectRelationship({
+            from: zoneEntity,
+            to: recordEntity,
+            _class: RelationshipClass.HAS,
+            properties: {
+              _type: Relationships.ZONE_HAS_RECORD._type,
+            },
+          }),
+        );
+      });
+    });
   },
 };
 

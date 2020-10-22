@@ -1,7 +1,7 @@
 import {
   IntegrationStep,
-  createIntegrationRelationship,
-  Relationship,
+  createDirectRelationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
@@ -11,62 +11,69 @@ import {
   convertAccountRole,
 } from '../../converter';
 import { CloudflareIntegrationConfig } from '../../types';
+import { Entities, Steps, Relationships } from '../../constants';
 
 const step: IntegrationStep<CloudflareIntegrationConfig> = {
-  id: 'fetch-accounts',
+  id: Steps.ACCOUNT,
   name: 'Fetch Cloudflare Accounts, Members, and Roles',
-  types: ['cloudflare_account'],
-  async executionHandler({ instance, jobState }) {
-    const client = createServicesClient(instance);
+  entities: [Entities.ACCOUNT, Entities.MEMBER, Entities.ROLE],
+  relationships: [
+    Relationships.ACCOUNT_HAS_MEMBER,
+    Relationships.ACCOUNT_HAS_ROLE,
+    Relationships.MEMBER_ASSIGNED_ROLE,
+  ],
+  async executionHandler(context) {
+    const { jobState } = context;
+    const client = createServicesClient(context);
 
-    const accounts = await client.listAccounts();
-    const accountEntities = accounts.map(convertAccount);
-    await jobState.addEntities(accountEntities);
+    await client.iterateAccounts(async (account) => {
+      const accountEntity = convertAccount(account);
+      await jobState.addEntity(accountEntity);
 
-    for (const accountEntity of accountEntities) {
-      const members = await client.listAccountMembers(accountEntity.id);
-      const roles = await client.listAccountRoles(accountEntity.id);
+      await client.iterateAccountRoles(account.id, async (role) => {
+        const roleEntity = convertAccountRole(role);
+        await jobState.addEntity(roleEntity);
 
-      const memberEntities = members.map(convertAccountMember);
-      await jobState.addEntities(memberEntities);
-
-      const accountMemberRelationships = memberEntities.map((memberEntity) =>
-        createIntegrationRelationship({
-          from: accountEntity,
-          to: memberEntity,
-          _class: 'HAS',
-        }),
-      );
-      await jobState.addRelationships(accountMemberRelationships);
-
-      const roleEntities = roles.map(convertAccountRole);
-      await jobState.addEntities(roleEntities);
-
-      const accountRoleRelationships = roleEntities.map((roleEntity) =>
-        createIntegrationRelationship({
+        const accountRoleRelationship = createDirectRelationship({
+          _class: RelationshipClass.HAS,
           from: accountEntity,
           to: roleEntity,
-          _class: 'HAS',
-        }),
-      );
-      await jobState.addRelationships(accountRoleRelationships);
-
-      const memberRoleRelationships: Relationship[] = [];
-      memberEntities.forEach((memberEntity) => {
-        memberEntity.roles.forEach((role) => {
-          memberRoleRelationships.push(
-            createIntegrationRelationship({
-              fromKey: `cloudflare_account_role:${role}`,
-              fromType: 'cloudflare_account_role',
-              toKey: memberEntity._key,
-              toType: memberEntity._type,
-              _class: 'ASSIGNED',
-            }),
-          );
+          properties: {
+            _type: Relationships.ACCOUNT_HAS_ROLE._type,
+          },
         });
+        await jobState.addRelationship(accountRoleRelationship);
       });
-      await jobState.addRelationships(memberRoleRelationships);
-    }
+
+      await client.iterateAccountMembers(account.id, async (member) => {
+        const memberEntity = convertAccountMember(member);
+        await jobState.addEntity(memberEntity);
+
+        const accountMemberRelationship = createDirectRelationship({
+          _class: RelationshipClass.HAS,
+          from: accountEntity,
+          to: memberEntity,
+          properties: {
+            _type: Relationships.ACCOUNT_HAS_MEMBER._type,
+          },
+        });
+        await jobState.addRelationship(accountMemberRelationship);
+
+        for (const role of member.roles) {
+          const memberRoleRelationship = createDirectRelationship({
+            toKey: `cloudflare_account_role:${role.id}`,
+            toType: 'cloudflare_account_role',
+            fromKey: memberEntity._key,
+            fromType: memberEntity._type,
+            _class: RelationshipClass.ASSIGNED,
+            properties: {
+              _type: Relationships.MEMBER_ASSIGNED_ROLE._type,
+            },
+          });
+          await jobState.addRelationship(memberRoleRelationship);
+        }
+      });
+    });
   },
 };
 

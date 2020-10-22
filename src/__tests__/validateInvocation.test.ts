@@ -45,7 +45,7 @@ test('rejects if unable to hit provider apis', async () => {
 });
 
 test('performs sample api call to ensure api can be hit', async () => {
-  fetchMock.mockResponse(JSON.stringify({ result: [] }));
+  fetchMock.mockResponse(JSON.stringify({ result: [], success: true }));
 
   const context = createMockExecutionContext<CloudflareIntegrationConfig>({
     instanceConfig: {
