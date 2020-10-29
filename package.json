@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-cloudflare",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A graph conversion tool for https://www.cloudflare.com/",
   "license": "MPL-2.0",
   "main": "dist/index.js",
@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "@cloudflare/types": "^6.6.3",
-    "@jupiterone/integration-sdk-core": "^3.6.0",
-    "@jupiterone/integration-sdk-dev-tools": "^3.6.0",
-    "@jupiterone/integration-sdk-testing": "^3.6.0",
+    "@jupiterone/integration-sdk-core": "^4.0.0",
+    "@jupiterone/integration-sdk-dev-tools": "^4.0.0",
+    "@jupiterone/integration-sdk-testing": "^4.0.0",
     "@types/har-format": "^1.2.4",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.11.1",
@@ -55,6 +55,6 @@
     "wait-for-expect": "^3.0.2"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^3.6.0"
+    "@jupiterone/integration-sdk-core": "^4.0.0"
   }
 }
