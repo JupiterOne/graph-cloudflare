@@ -23,8 +23,10 @@ const step: IntegrationStep<CloudflareIntegrationConfig> = {
     Relationships.MEMBER_ASSIGNED_ROLE,
   ],
   async executionHandler(context) {
-    const { jobState } = context;
+    const { logger, jobState } = context;
     const client = createServicesClient(context);
+
+    const accountRoleKeys = new Set<string>();
 
     await client.iterateAccounts(async (account) => {
       const accountEntity = convertAccount(account);
@@ -32,7 +34,16 @@ const step: IntegrationStep<CloudflareIntegrationConfig> = {
 
       await client.iterateAccountRoles(account.id, async (role) => {
         const roleEntity = convertAccountRole(role);
-        await jobState.addEntity(roleEntity);
+        if (accountRoleKeys.has(roleEntity._key)) {
+          // Avoid overwriting `accountId` in logging
+          logger.warn(
+            { _key: roleEntity._key, account: { id: account.id } },
+            'Duplicate role key, suggests roles are not unique across accounts',
+          );
+        } else {
+          await jobState.addEntity(roleEntity);
+          accountRoleKeys.add(roleEntity._key);
+        }
 
         const accountRoleRelationship = createDirectRelationship({
           _class: RelationshipClass.HAS,
@@ -46,18 +57,20 @@ const step: IntegrationStep<CloudflareIntegrationConfig> = {
       });
 
       await client.iterateAccountMembers(account.id, async (member) => {
-        const memberEntity = convertAccountMember(member);
-        await jobState.addEntity(memberEntity);
+        const memberEntity = await jobState.addEntity(
+          convertAccountMember(member),
+        );
 
-        const accountMemberRelationship = createDirectRelationship({
-          _class: RelationshipClass.HAS,
-          from: accountEntity,
-          to: memberEntity,
-          properties: {
-            _type: Relationships.ACCOUNT_HAS_MEMBER._type,
-          },
-        });
-        await jobState.addRelationship(accountMemberRelationship);
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.HAS,
+            from: accountEntity,
+            to: memberEntity,
+            properties: {
+              _type: Relationships.ACCOUNT_HAS_MEMBER._type,
+            },
+          }),
+        );
 
         for (const role of member.roles) {
           const memberRoleRelationship = createDirectRelationship({

@@ -66,6 +66,7 @@ export class ServicesClient {
   }
 
   async validateInvocation(): Promise<boolean> {
+    // TODO: Consider using https://api.cloudflare.com/client/v4/user/tokens/verify
     const response = await this.fetch('accounts', {
       page: '1',
       per_page: '1',
