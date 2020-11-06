@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.5.1 - 2020-11-06
+
+### Fixed
+
+- Duplicate `_key` for `cloudflare_account_role` entities
+
 ## 0.5.0 - 2020-10-29
 
 ### Changed
