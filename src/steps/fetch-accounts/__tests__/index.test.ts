@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { createStepContext } from '../../../../test';
 import { Recording, setupRecording } from '@jupiterone/integration-sdk-testing';
 
@@ -73,8 +72,23 @@ test('should process account entities', async () => {
   const memberEntities = collectedEntities.filter(
     (e) => e._type === Entities.MEMBER._type,
   );
+
   expect(memberEntities).toMatchGraphObjectSchema({
     _class: Entities.MEMBER._class,
+    schema: {
+      // User entities require name properties that may not be available in the
+      // Cloudflare data.
+      properties: {
+        firstName: {
+          type: 'string',
+          nullable: true,
+        },
+        lastName: {
+          type: 'string',
+          nullable: true,
+        },
+      },
+    },
   });
 
   const roleEntities = collectedEntities.filter(
