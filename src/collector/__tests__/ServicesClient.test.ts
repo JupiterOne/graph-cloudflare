@@ -1,7 +1,8 @@
-import { ServicesClient } from '../ServicesClient';
-import { createMockIntegrationLogger } from '@jupiterone/integration-sdk-testing';
-import { createStepContext } from '../../../test';
 import { PaginationInfo } from '@cloudflare/types';
+import { createMockIntegrationLogger } from '@jupiterone/integration-sdk-testing';
+
+import { createStepContext } from '../../../test/context';
+import { ServicesClient } from '../ServicesClient';
 
 function createCloudflareApiResponse(paginationInfo: PaginationInfo) {
   const { page, count, total_count, per_page, total_pages } = paginationInfo;

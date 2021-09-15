@@ -1,18 +1,18 @@
-import { retry } from '@lifeomic/attempt';
 import nodeFetch, { Request } from 'node-fetch';
-
-import { retryableRequestError, fatalRequestError } from './error';
 import { URLSearchParams } from 'url';
-import { CloudflareIntegrationConfig } from '../types';
+
 import {
   Account,
-  // AccountMember, // error TS2589: Type instantiation is excessively deep and possibly infinite.
-  Zone,
-  DNSRecord,
-  APIResponseBody,
   AccountRole,
+  APIResponseBody,
+  DNSRecord,
+  Zone,
 } from '@cloudflare/types';
 import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
+import { retry } from '@lifeomic/attempt';
+
+import { IntegrationConfig } from '../config';
+import { fatalRequestError, retryableRequestError } from './error';
 
 const BASE_URL = 'https://api.cloudflare.com/client/v4/';
 
@@ -29,7 +29,7 @@ export class ServicesClient {
   readonly logger: IntegrationLogger;
   readonly limit: number;
 
-  constructor(config: CloudflareIntegrationConfig, logger: IntegrationLogger) {
+  constructor(config: IntegrationConfig, logger: IntegrationLogger) {
     this.apiToken = config.apiToken;
     this.logger = logger;
     this.limit = DEFAULT_API_LIMIT;

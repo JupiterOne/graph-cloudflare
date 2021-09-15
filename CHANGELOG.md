@@ -8,6 +8,7 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Move to `main` branch, update build process to latest approach
 - Upgrade all packages to latest compatible versions
 
 ## 0.5.1 - 2020-11-06

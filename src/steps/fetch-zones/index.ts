@@ -1,15 +1,15 @@
 import {
-  IntegrationStep,
   createDirectRelationship,
+  IntegrationStep,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
-import { convertZone, convertRecord } from '../../converter';
-import { CloudflareIntegrationConfig } from '../../types';
-import { Relationships, Entities, Steps } from '../../constants';
+import { IntegrationConfig } from '../../config';
+import { Entities, Relationships, Steps } from '../../constants';
+import { convertRecord, convertZone } from '../../converter';
 
-const step: IntegrationStep<CloudflareIntegrationConfig> = {
+const step: IntegrationStep<IntegrationConfig> = {
   id: Steps.ZONES,
   name: 'Fetch Cloudflare DNS Zones and Records',
   entities: [Entities.DNS_ZONE, Entities.DNS_RECORD],
