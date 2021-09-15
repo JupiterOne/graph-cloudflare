@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Upgrade all packages to latest compatible versions
+
 ## 0.5.1 - 2020-11-06
 
 ### Fixed

@@ -14,11 +14,9 @@ test('rejects if apiToken is not present', async () => {
 
   const context = createMockExecutionContext<CloudflareIntegrationConfig>({
     instanceConfig: {
-      apiToken: '',
+      apiToken: undefined as unknown as string,
     },
   });
-
-  delete context.instance.config.apiToken;
 
   await expect(validateInvocation(context)).rejects.toThrow(
     /Failed to authenticate/,

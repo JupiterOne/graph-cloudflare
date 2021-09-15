@@ -5,7 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import {
   Account,
-  AccountMember,
+  // AccountMember, // error TS2589: Type instantiation is excessively deep and possibly infinite.
   AccountRole,
   Zone,
   DNSRecord,
@@ -35,7 +35,7 @@ export const convertAccount = (
   });
 
 export const convertAccountMember = (
-  data: AccountMember,
+  data: any,
 ): ReturnType<typeof createIntegrationEntity> =>
   createIntegrationEntity({
     entityData: {

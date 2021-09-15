@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { retry } from '@lifeomic/attempt';
 import nodeFetch, { Request } from 'node-fetch';
 
@@ -7,7 +6,7 @@ import { URLSearchParams } from 'url';
 import { CloudflareIntegrationConfig } from '../types';
 import {
   Account,
-  AccountMember,
+  // AccountMember, // error TS2589: Type instantiation is excessively deep and possibly infinite.
   Zone,
   DNSRecord,
   APIResponseBody,
@@ -42,7 +41,7 @@ export class ServicesClient {
 
   async iterateAccountMembers(
     accountId: string,
-    iteratee: CloudflareIteratee<AccountMember>,
+    iteratee: CloudflareIteratee<any>,
   ): Promise<void> {
     await this.iterateAll(`accounts/${accountId}/members`, iteratee);
   }
