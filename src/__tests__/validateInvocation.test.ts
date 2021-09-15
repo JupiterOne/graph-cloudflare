@@ -1,9 +1,8 @@
+import fetchMock from 'jest-fetch-mock';
+
 import { createMockExecutionContext } from '@jupiterone/integration-sdk-testing';
 
-import validateInvocation from '../validateInvocation';
-
-import fetchMock from 'jest-fetch-mock';
-import { CloudflareIntegrationConfig } from '../types';
+import { IntegrationConfig, validateInvocation } from '../config';
 
 beforeEach(() => {
   fetchMock.doMock();
@@ -12,7 +11,7 @@ beforeEach(() => {
 test('rejects if apiToken is not present', async () => {
   fetchMock.mockResponse('{}');
 
-  const context = createMockExecutionContext<CloudflareIntegrationConfig>({
+  const context = createMockExecutionContext<IntegrationConfig>({
     instanceConfig: {
       apiToken: undefined as unknown as string,
     },
@@ -31,7 +30,7 @@ test('rejects if unable to hit provider apis', async () => {
     }),
   );
 
-  const context = createMockExecutionContext<CloudflareIntegrationConfig>({
+  const context = createMockExecutionContext<IntegrationConfig>({
     instanceConfig: {
       apiToken: 'test',
     },
@@ -45,7 +44,7 @@ test('rejects if unable to hit provider apis', async () => {
 test('performs sample api call to ensure api can be hit', async () => {
   fetchMock.mockResponse(JSON.stringify({ result: [], success: true }));
 
-  const context = createMockExecutionContext<CloudflareIntegrationConfig>({
+  const context = createMockExecutionContext<IntegrationConfig>({
     instanceConfig: {
       apiToken: 'test',
     },

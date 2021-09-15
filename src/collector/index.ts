@@ -2,15 +2,16 @@ import {
   IntegrationExecutionContext,
   IntegrationValidationError,
 } from '@jupiterone/integration-sdk-core';
+
+import { IntegrationConfig } from '../config';
 import { ServicesClient } from './ServicesClient';
-import { CloudflareIntegrationConfig } from '../types';
 
 /**
  * Creates a ServicesClient from an integration instance using it's
  * api key.
  */
 export function createServicesClient(
-  context: IntegrationExecutionContext<CloudflareIntegrationConfig>,
+  context: IntegrationExecutionContext<IntegrationConfig>,
 ): ServicesClient {
   const { apiToken } = context.instance.config;
 

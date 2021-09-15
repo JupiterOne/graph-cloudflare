@@ -1,8 +1,8 @@
-import { createStepContext } from '../../../../test';
 import { Recording, setupRecording } from '@jupiterone/integration-sdk-testing';
 
-import step from '../index';
+import { createStepContext } from '../../../../test/context';
 import { Entities } from '../../../constants';
+import step from '../index';
 
 let recording: Recording;
 

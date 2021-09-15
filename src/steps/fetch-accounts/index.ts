@@ -1,19 +1,19 @@
 import {
-  IntegrationStep,
   createDirectRelationship,
+  IntegrationStep,
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
+import { IntegrationConfig } from '../../config';
+import { Entities, Relationships, Steps } from '../../constants';
 import {
   convertAccount,
   convertAccountMember,
   convertAccountRole,
 } from '../../converter';
-import { CloudflareIntegrationConfig } from '../../types';
-import { Entities, Steps, Relationships } from '../../constants';
 
-const step: IntegrationStep<CloudflareIntegrationConfig> = {
+const step: IntegrationStep<IntegrationConfig> = {
   id: Steps.ACCOUNT,
   name: 'Fetch Cloudflare Accounts, Members, and Roles',
   entities: [Entities.ACCOUNT, Entities.MEMBER, Entities.ROLE],

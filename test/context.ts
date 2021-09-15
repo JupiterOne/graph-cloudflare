@@ -2,12 +2,12 @@ import {
   createMockStepExecutionContext,
   MockIntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-testing';
-import { CloudflareIntegrationConfig } from '../src/types';
 
-export function createStepContext(): MockIntegrationStepExecutionContext<CloudflareIntegrationConfig> {
+import { IntegrationConfig } from '../src/config';
+import { integrationConfig } from './config';
+
+export function createStepContext(): MockIntegrationStepExecutionContext<IntegrationConfig> {
   return createMockStepExecutionContext({
-    instanceConfig: {
-      apiToken: process.env.API_TOKEN || 'test',
-    },
+    instanceConfig: integrationConfig,
   });
 }

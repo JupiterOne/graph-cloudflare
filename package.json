@@ -3,31 +3,33 @@
   "version": "0.5.1",
   "description": "A graph conversion tool for https://www.cloudflare.com/",
   "license": "MPL-2.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "files": [
-    "dist"
+    "src"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "collect": "j1-integration collect",
+    "start": "j1-integration collect",
     "graph": "j1-integration visualize",
-    "start": "yarn collect; yarn graph",
+    "graph:types": "j1-integration visualize-types",
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
     "format": "prettier --write '**/*.{ts,js,json,css,md,yml}'",
     "type-check": "tsc",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
+    "test:env": "LOAD_ENV=1 yarn test",
     "test:ci": "yarn lint && yarn type-check && yarn test",
-    "prebuild": "yarn test:ci",
-    "prepush": "yarn test:ci",
-    "build": "tsc -p tsconfig.dist.json --declaration",
-    "prepack": "yarn build"
+    "build": "tsc -p tsconfig.dist.json --declaration && cp README.md dist/README.md",
+    "prepush": "yarn lint && yarn type-check && jest --changedSince main"
   },
   "dependencies": {
     "@lifeomic/attempt": "^3.0.0",
     "node-fetch": "^2.6.0"
+  },
+  "peerDependencies": {
+    "@jupiterone/integration-sdk-core": "^6.19.0"
   },
   "devDependencies": {
     "@cloudflare/types": "^6.8.18",
@@ -36,8 +38,5 @@
     "@jupiterone/integration-sdk-testing": "^6.19.0",
     "jest-fetch-mock": "^3.0.3",
     "wait-for-expect": "^3.0.2"
-  },
-  "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^6.19.0"
   }
 }
