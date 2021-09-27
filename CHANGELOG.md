@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Report authentication and authorization errors to users instead of operator
+
 ## 0.6.0 - 2021-09-16
 
 - Move to `main` branch, update build process to latest approach

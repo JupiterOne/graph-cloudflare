@@ -5,7 +5,7 @@ import {
   IntegrationValidationError,
 } from '@jupiterone/integration-sdk-core';
 
-import { createServicesClient } from './collector';
+import { ServicesClient } from './client';
 
 /**
  * A type describing the configuration fields required to execute the
@@ -39,31 +39,13 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
 export async function validateInvocation(
   context: IntegrationExecutionContext<IntegrationConfig>,
 ) {
-  context.logger.info(
-    {
-      instance: context.instance,
-    },
-    'Validating integration config...',
-  );
+  const { instance, logger } = context;
+  const { config } = instance;
 
-  if (await isConfigurationValid(context)) {
-    context.logger.info('Integration instance is valid!');
-  } else {
-    throw new IntegrationValidationError(
-      'Failed to authenticate with provided credentials',
-    );
+  if (!config.apiToken) {
+    throw new IntegrationValidationError('Config requires all of {apiToken}');
   }
-}
 
-async function isConfigurationValid(
-  context: IntegrationExecutionContext<IntegrationConfig>,
-): Promise<boolean> {
-  // perform test api call. This will fail if we do not have access.
-  try {
-    const client = createServicesClient(context);
-    const response = await client.validateInvocation();
-    return response;
-  } catch (err) {
-    return false;
-  }
+  const client = new ServicesClient({ config, logger });
+  await client.validateInvocation();
 }

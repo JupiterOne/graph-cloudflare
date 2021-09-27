@@ -4,7 +4,7 @@ import {
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
-import { createServicesClient } from '../../collector';
+import { ServicesClient } from '../../client';
 import { IntegrationConfig } from '../../config';
 import { Entities, Relationships, Steps } from '../../constants';
 import {
@@ -23,8 +23,8 @@ const step: IntegrationStep<IntegrationConfig> = {
     Relationships.MEMBER_ASSIGNED_ROLE,
   ],
   async executionHandler(context) {
-    const { logger, jobState } = context;
-    const client = createServicesClient(context);
+    const { instance, logger, jobState } = context;
+    const client = new ServicesClient({ config: instance.config, logger });
 
     const accountRoleKeys = new Set<string>();
 
