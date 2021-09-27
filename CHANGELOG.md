@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.1 - 2021-09-27
+
 - Report authentication and authorization errors to users instead of operator
 - Retry ECONNRESET errors from Cloudflare API server
 
