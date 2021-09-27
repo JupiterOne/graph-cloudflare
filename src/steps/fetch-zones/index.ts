@@ -4,7 +4,7 @@ import {
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
-import { createServicesClient } from '../../collector';
+import { ServicesClient } from '../../client';
 import { IntegrationConfig } from '../../config';
 import { Entities, Relationships, Steps } from '../../constants';
 import { convertRecord, convertZone } from '../../converter';
@@ -19,8 +19,8 @@ const step: IntegrationStep<IntegrationConfig> = {
   ],
   dependsOn: [Steps.ACCOUNT],
   async executionHandler(context) {
-    const { jobState } = context;
-    const client = createServicesClient(context);
+    const { instance, logger, jobState } = context;
+    const client = new ServicesClient({ config: instance.config, logger });
 
     await client.iterateZones(async (zone) => {
       const zoneEntity = convertZone(zone);

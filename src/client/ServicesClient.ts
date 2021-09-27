@@ -20,19 +20,39 @@ type CloudflareIteratee<T> = (obj: T) => void | Promise<void>;
 
 export const DEFAULT_API_LIMIT = 500;
 
+type RetryConfig = {
+  maxAttempts: number;
+  delay: number;
+  factor: number;
+  jitter: boolean;
+};
+
+type ClientConfig = {
+  config: IntegrationConfig;
+  logger: IntegrationLogger;
+  retryConfig?: Partial<RetryConfig>;
+};
+
 /**
  * Services Api
  * https://api.cloudflare.com/
  */
 export class ServicesClient {
+  readonly retryConfig: RetryConfig;
   readonly apiToken: string;
   readonly logger: IntegrationLogger;
   readonly limit: number;
 
-  constructor(config: IntegrationConfig, logger: IntegrationLogger) {
+  constructor({ config, logger, retryConfig }: ClientConfig) {
     this.apiToken = config.apiToken;
     this.logger = logger;
     this.limit = DEFAULT_API_LIMIT;
+    this.retryConfig = {
+      maxAttempts: retryConfig?.maxAttempts ?? 10,
+      delay: retryConfig?.delay ?? 200,
+      factor: retryConfig?.factor ?? 2,
+      jitter: retryConfig?.jitter ?? true,
+    };
   }
 
   async iterateAccounts(iteratee: CloudflareIteratee<Account>): Promise<void> {
@@ -136,10 +156,7 @@ export class ServicesClient {
         }
       },
       {
-        maxAttempts: 10,
-        delay: 200,
-        factor: 2,
-        jitter: true,
+        ...this.retryConfig,
         handleError: (err, context) => {
           if (!err.retryable) {
             // can't retry this? just abort
