@@ -158,10 +158,9 @@ export class ServicesClient {
       {
         ...this.retryConfig,
         handleError: (err, context) => {
-          if (!err.retryable) {
-            // can't retry this? just abort
-            context.abort();
-          }
+          if (err.retryable) return;
+          if (err.code === 'ECONNRESET') return;
+          context.abort();
         },
       },
     );

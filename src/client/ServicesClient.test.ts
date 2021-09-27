@@ -129,6 +129,34 @@ test('retry fail', async () => {
   expect(fetchMock.mock.calls.length).toBe(2);
 });
 
+test('retry ECONNRESET', async () => {
+  // Simulate system errorß
+  const econnresetError = new Error('read ECONNRESET');
+  (econnresetError as any).code = 'ECONNRESET';
+
+  // Simulate FetchError
+  const fetchError = new Error(
+    `request failed, reason: ${econnresetError.message}`,
+  );
+  (fetchError as any).code = (econnresetError as any).code;
+  fetchMock.mockRejectOnce(fetchError);
+
+  // Succeed on retry
+  mockAPIResponses([
+    createResponseBody({ result: [{ id: '1' }] }),
+    { status: 200 },
+  ]);
+
+  const iteratee = jest.fn();
+  await expect(
+    client.iterateAll('some-endpoint', iteratee),
+  ).resolves.toBeUndefined();
+
+  expect(iteratee.mock.calls.length).toBe(1);
+  expect(iteratee.mock.calls[0]).toEqual([{ id: '1' }]);
+  expect(fetchMock.mock.calls.length).toBe(2);
+});
+
 test('pagination', async () => {
   const page1 = [{ id: '1' }, { id: '2' }];
   const page2 = [{ id: '3' }];
