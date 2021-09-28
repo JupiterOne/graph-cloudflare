@@ -15,10 +15,9 @@ export function retryableRequestError(
   response: Response,
 ): RetryableIntegrationProviderApiError {
   return new RetryableIntegrationProviderApiError({
-    cause: response,
     endpoint: url,
     status: response.status,
-    statusText: response.statusText,
+    statusText: response.statusText ?? response.status,
   });
 }
 
@@ -27,10 +26,9 @@ export function fatalRequestError(
   response: Response,
 ): IntegrationProviderAPIError {
   const apiErrorOptions = {
-    cause: response,
     endpoint: url,
     status: response.status,
-    statusText: response.statusText,
+    statusText: response.statusText ?? response.status,
   };
 
   if (response.status === 401) {
