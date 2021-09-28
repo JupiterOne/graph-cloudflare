@@ -36,6 +36,7 @@
     "@jupiterone/integration-sdk-core": "^6.19.0",
     "@jupiterone/integration-sdk-dev-tools": "^6.19.0",
     "@jupiterone/integration-sdk-testing": "^6.19.0",
+    "@types/node-fetch": "^2.0.0",
     "jest-fetch-mock": "^3.0.3",
     "wait-for-expect": "^3.0.2"
   }

@@ -1,4 +1,4 @@
-import nodeFetch, { Request } from 'node-fetch';
+import nodeFetch, { Request, Response } from 'node-fetch';
 import { URLSearchParams } from 'url';
 
 import {
@@ -135,7 +135,7 @@ export class ServicesClient {
          * We are working with a json api, so just return the parsed data.
          */
         if (response.ok) {
-          const results = response.json() as APIResponseBody<
+          const results = (await response.json()) as APIResponseBody<
             TCloudflareObject[]
           >;
           this.logger.info(

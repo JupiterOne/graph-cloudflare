@@ -8,6 +8,9 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Fix floating promise that would hang the process and mishandle ECONNRESET
+  error
+
 ## 0.6.1 - 2021-09-27
 
 - Report authentication and authorization errors to users instead of operator
