@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.2 - 2021-09-28
+
 - Fix floating promise that would hang the process and mishandle ECONNRESET
   error
 
