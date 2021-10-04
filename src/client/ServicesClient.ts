@@ -114,56 +114,83 @@ export class ServicesClient {
     } while (page < totalPages);
   }
 
-  fetch<TCloudflareObject>(
+  async fetch<TCloudflareObject>(
     endpoint: string,
     queryParams: { page: string; per_page: string },
     request?: Omit<Request, 'url'>,
   ): Promise<APIResponseBody<TCloudflareObject[]>> {
-    return retry(
-      async () => {
-        const qs = new URLSearchParams(queryParams).toString();
-        const url = `${BASE_URL}${endpoint}?${qs}`;
-        const response = await nodeFetch(url, {
-          ...request,
-          headers: {
-            Authorization: `Bearer ${this.apiToken}`,
-            ...request?.headers,
-          },
-        });
+    let attemptCount = 0;
+    try {
+      return await retry(
+        async () => {
+          const qs = new URLSearchParams(queryParams).toString();
+          const url = `${BASE_URL}${endpoint}?${qs}`;
 
-        /**
-         * We are working with a json api, so just return the parsed data.
-         */
-        if (response.ok) {
-          const results = (await response.json()) as APIResponseBody<
-            TCloudflareObject[]
-          >;
-          this.logger.info(
-            {
-              url,
-              success: results.success,
-              resultCount: results.result_info?.count,
-            },
-            'Received response from endpoint',
-          );
-          return results;
-        }
+          let response: Response;
 
-        if (isRetryableRequest(response)) {
-          throw retryableRequestError(url, response);
-        } else {
-          throw fatalRequestError(url, response);
-        }
-      },
-      {
-        ...this.retryConfig,
-        handleError: (err, context) => {
-          if (err.retryable) return;
-          if (err.code === 'ECONNRESET') return;
-          context.abort();
+          try {
+            response = await nodeFetch(url, {
+              ...request,
+              headers: {
+                Authorization: `Bearer ${this.apiToken}`,
+                ...request?.headers,
+              },
+            });
+          } catch (err) {
+            this.logger.info(
+              { code: err.code, err, url },
+              'Error sending request',
+            );
+            throw err;
+          }
+
+          /**
+           * We are working with a json api, so just return the parsed data.
+           */
+          if (response.ok) {
+            try {
+              const results = (await response.json()) as APIResponseBody<
+                TCloudflareObject[]
+              >;
+              this.logger.info(
+                {
+                  url,
+                  success: results.success,
+                  resultCount: results.result_info?.count,
+                },
+                'Received response from endpoint',
+              );
+              return results;
+            } catch (err) {
+              this.logger.info(
+                { code: err.code, err, url },
+                'Error reading json body',
+              );
+              throw err;
+            }
+          }
+
+          if (isRetryableRequest(response)) {
+            throw retryableRequestError(url, response);
+          } else {
+            throw fatalRequestError(url, response);
+          }
         },
-      },
-    );
+        {
+          ...this.retryConfig,
+          handleError: (err, context) => {
+            attemptCount++;
+            if (err.retryable) return;
+            if (err.code === 'ECONNRESET' || err.message.includes('ECONNRESET'))
+              return;
+            context.abort();
+          },
+        },
+      );
+    } catch (err) {
+      this.logger.info({ attemptCount, err }, 'Request failed attempts');
+      throw err;
+    }
   }
 }
 
