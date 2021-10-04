@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.3 - 2021-10-04
+
+- Add logging to expose retry behavior and error details
+
 ## 0.6.2 - 2021-09-28
 
 - Fix floating promise that would hang the process and mishandle ECONNRESET
