@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.4 - 2021-10-08
+
+- Add logging to uncover `multipleResolves` issues
+
 ## 0.6.3 - 2021-10-04
 
 - Add logging to expose retry behavior and error details
