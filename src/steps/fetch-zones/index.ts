@@ -38,21 +38,47 @@ const step: IntegrationStep<IntegrationConfig> = {
       });
       await jobState.addRelationship(accountZoneRelationship);
 
-      await client.iterateZoneRecords(zoneEntity.id, async (zoneRecord) => {
-        const recordEntity = convertRecord(zoneRecord);
-        await jobState.addEntity(recordEntity);
+      if (zoneEntity.id) {
+        if (typeof zoneEntity.id === 'string') {
+          await client.iterateZoneRecords(zoneEntity.id, async (zoneRecord) => {
+            const recordEntity = convertRecord(zoneRecord);
+            await jobState.addEntity(recordEntity);
 
-        await jobState.addRelationship(
-          createDirectRelationship({
-            from: zoneEntity,
-            to: recordEntity,
-            _class: RelationshipClass.HAS,
-            properties: {
-              _type: Relationships.ZONE_HAS_RECORD._type,
-            },
-          }),
-        );
-      });
+            await jobState.addRelationship(
+              createDirectRelationship({
+                from: zoneEntity,
+                to: recordEntity,
+                _class: RelationshipClass.HAS,
+                properties: {
+                  _type: Relationships.ZONE_HAS_RECORD._type,
+                },
+              }),
+            );
+          });
+        } else {
+          const iterateZoneRecordsPromises: Promise<void>[] = [];
+          zoneEntity.id.forEach((id) =>
+            iterateZoneRecordsPromises.push(
+              client.iterateZoneRecords(id, async (zoneRecord) => {
+                const recordEntity = convertRecord(zoneRecord);
+                await jobState.addEntity(recordEntity);
+
+                await jobState.addRelationship(
+                  createDirectRelationship({
+                    from: zoneEntity,
+                    to: recordEntity,
+                    _class: RelationshipClass.HAS,
+                    properties: {
+                      _type: Relationships.ZONE_HAS_RECORD._type,
+                    },
+                  }),
+                );
+              }),
+            ),
+          );
+          await Promise.all(iterateZoneRecordsPromises);
+        }
+      }
     });
   },
 };
