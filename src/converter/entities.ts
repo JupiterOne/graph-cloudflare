@@ -47,8 +47,8 @@ export const convertAccountMember = (
         id: (data.user?.id || data.id) as string,
         userId: data.user?.id,
         membershipId: data.id,
-        firstName: data.user?.first_name,
-        lastName: data.user?.last_name,
+        firstName: data.user?.first_name ?? '',
+        lastName: data.user?.last_name ?? '',
         name:
           data.user?.first_name && data.user?.last_name
             ? `${data.user?.first_name} ${data.user?.first_name}`
