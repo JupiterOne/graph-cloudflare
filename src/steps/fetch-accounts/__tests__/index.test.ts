@@ -40,7 +40,7 @@ test('should process account entities', async () => {
       expect.objectContaining({
         _type: 'cloudflare_account',
         _class: ['Account'],
-        displayName: 'My Account',
+        displayName: "David.obregon@contractor.jupiterone.com's Account",
         accountId: expect.any(String),
         mfaEnabled: undefined,
         mfaEnforced: false,
@@ -48,7 +48,7 @@ test('should process account entities', async () => {
       expect.objectContaining({
         _type: 'cloudflare_account_member',
         _class: ['User'],
-        displayName: 'user@company.com',
+        displayName: 'david.obregon@contractor.jupiterone.com',
         mfaEnabled: false,
         active: true,
         admin: true,
@@ -66,7 +66,7 @@ test('should process account entities', async () => {
     (e) => e._type === Entities.ACCOUNT._type,
   );
   expect(accountEntities).toMatchGraphObjectSchema({
-    _class: Entities.ACCOUNT._class,
+    _class: [Entities.ACCOUNT._class],
   });
 
   const memberEntities = collectedEntities.filter(
@@ -74,7 +74,7 @@ test('should process account entities', async () => {
   );
 
   expect(memberEntities).toMatchGraphObjectSchema({
-    _class: Entities.MEMBER._class,
+    _class: [Entities.MEMBER._class],
     schema: {
       // User entities require name properties that may not be available in the
       // Cloudflare data.
@@ -95,7 +95,7 @@ test('should process account entities', async () => {
     (e) => e._type === Entities.ROLE._type,
   );
   expect(roleEntities).toMatchGraphObjectSchema({
-    _class: Entities.ROLE._class,
+    _class: [Entities.ROLE._class],
   });
 
   expect(collectedRelationships).toMatchDirectRelationshipSchema({});
