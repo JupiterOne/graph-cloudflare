@@ -6,7 +6,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import {
   Account,
-  // AccountMember, // error TS2589: Type instantiation is excessively deep and possibly infinite.
+  AccountMember,
   AccountRole,
   Zone,
   DNSRecord,
@@ -33,7 +33,9 @@ export const convertAccount = (data: Account): Entity =>
     },
   });
 
-export const convertAccountMember = (data: any): Entity =>
+export const convertAccountMember = (
+  data: Pick<AccountMember, 'id' | 'user' | 'status' | 'roles'>,
+): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -44,8 +46,8 @@ export const convertAccountMember = (data: any): Entity =>
         id: (data.user?.id || data.id) as string,
         userId: data.user?.id,
         membershipId: data.id,
-        firstName: data.user?.first_name ?? '',
-        lastName: data.user?.last_name ?? '',
+        firstName: data.user?.first_name,
+        lastName: data.user?.last_name,
         name:
           data.user?.first_name && data.user?.last_name
             ? `${data.user?.first_name} ${data.user?.first_name}`

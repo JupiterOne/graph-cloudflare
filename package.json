@@ -32,7 +32,7 @@
     "@jupiterone/integration-sdk-core": "^8.30.3"
   },
   "devDependencies": {
-    "@cloudflare/types": "^6.8.18",
+    "@cloudflare/types": "^6.21.2",
     "@jupiterone/integration-sdk-core": "^8.30.3",
     "@jupiterone/integration-sdk-dev-tools": "^8.30.3",
     "@jupiterone/integration-sdk-testing": "^8.30.3",
