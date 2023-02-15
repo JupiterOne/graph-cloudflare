@@ -37,10 +37,16 @@ const step: IntegrationStep<IntegrationConfig> = {
         },
       });
       await jobState.addRelationship(accountZoneRelationship);
-
-      if (zoneEntity.id) {
-        if (typeof zoneEntity.id === 'string') {
-          await client.iterateZoneRecords(zoneEntity.id, async (zoneRecord) => {
+      let zoneEntityIds: string[] = [];
+      if (zoneEntity.id && typeof zoneEntity.id === 'string') {
+        zoneEntityIds = [zoneEntity.id];
+      } else if (zoneEntity.id && typeof zoneEntity.id === 'object') {
+        zoneEntityIds = zoneEntity.id;
+      }
+      const iterateZoneRecordsPromises: Promise<void>[] = [];
+      zoneEntityIds.forEach((id) =>
+        iterateZoneRecordsPromises.push(
+          client.iterateZoneRecords(id, async (zoneRecord) => {
             const recordEntity = convertRecord(zoneRecord);
             await jobState.addEntity(recordEntity);
 
@@ -54,31 +60,10 @@ const step: IntegrationStep<IntegrationConfig> = {
                 },
               }),
             );
-          });
-        } else {
-          const iterateZoneRecordsPromises: Promise<void>[] = [];
-          zoneEntity.id.forEach((id) =>
-            iterateZoneRecordsPromises.push(
-              client.iterateZoneRecords(id, async (zoneRecord) => {
-                const recordEntity = convertRecord(zoneRecord);
-                await jobState.addEntity(recordEntity);
-
-                await jobState.addRelationship(
-                  createDirectRelationship({
-                    from: zoneEntity,
-                    to: recordEntity,
-                    _class: RelationshipClass.HAS,
-                    properties: {
-                      _type: Relationships.ZONE_HAS_RECORD._type,
-                    },
-                  }),
-                );
-              }),
-            ),
-          );
-          await Promise.all(iterateZoneRecordsPromises);
-        }
-      }
+          }),
+        ),
+      );
+      await Promise.all(iterateZoneRecordsPromises);
     });
   },
 };
