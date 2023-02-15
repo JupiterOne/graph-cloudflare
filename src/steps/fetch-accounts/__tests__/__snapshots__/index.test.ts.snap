@@ -6,13 +6,13 @@ Array [
     "_class": Array [
       "Account",
     ],
-    "_key": "cloudflare_account:209732935e34e48e396793c87747fb54",
+    "_key": "cloudflare_account:cd12fd3d7190eff1985f713c47015663",
     "_rawData": Array [
       Object {
         "name": "default",
         "rawData": Object {
-          "created_on": "2020-04-26T01:15:30.497692Z",
-          "id": "209732935e34e48e396793c87747fb54",
+          "created_on": "2023-02-10T17:42:13.428084Z",
+          "id": "cd12fd3d7190eff1985f713c47015663",
           "legacy_flags": Object {
             "enterprise_zone_quota": Object {
               "available": 0,
@@ -20,10 +20,12 @@ Array [
               "maximum": 0,
             },
           },
-          "name": "My Account",
+          "name": "David.obregon@contractor.jupiterone.com's Account",
           "settings": Object {
             "access_approval_expiry": null,
+            "api_access_enabled": null,
             "enforce_twofactor": false,
+            "use_account_custom_ns_by_default": false,
           },
           "type": "standard",
         },
@@ -31,13 +33,13 @@ Array [
     ],
     "_type": "cloudflare_account",
     "accessApprovalExpiry": null,
-    "accountId": "209732935e34e48e396793c87747fb54",
-    "createdOn": 1587863730497,
-    "displayName": "My Account",
-    "id": "209732935e34e48e396793c87747fb54",
+    "accountId": "cd12fd3d7190eff1985f713c47015663",
+    "createdOn": 1676050933428,
+    "displayName": "David.obregon@contractor.jupiterone.com's Account",
+    "id": "cd12fd3d7190eff1985f713c47015663",
     "mfaEnabled": undefined,
     "mfaEnforced": false,
-    "name": "My Account",
+    "name": "David.obregon@contractor.jupiterone.com's Account",
     "type": "standard",
   },
   Object {
@@ -73,11 +75,35 @@ Array [
               "edit": false,
               "read": true,
             },
+            "blocks": Object {
+              "edit": true,
+              "read": true,
+            },
             "cache_purge": Object {
               "edit": true,
               "read": false,
             },
             "dns_records": Object {
+              "edit": true,
+              "read": true,
+            },
+            "fbm": Object {
+              "edit": true,
+              "read": true,
+            },
+            "fbm_acc": Object {
+              "edit": true,
+              "read": false,
+            },
+            "healthchecks": Object {
+              "edit": true,
+              "read": true,
+            },
+            "http_applications": Object {
+              "edit": true,
+              "read": true,
+            },
+            "image": Object {
               "edit": true,
               "read": true,
             },
@@ -90,6 +116,10 @@ Array [
               "read": true,
             },
             "logs": Object {
+              "edit": true,
+              "read": true,
+            },
+            "magic": Object {
               "edit": true,
               "read": true,
             },
@@ -116,8 +146,13 @@ Array [
             "teams": Object {
               "edit": true,
               "read": true,
+              "report": true,
             },
             "waf": Object {
+              "edit": true,
+              "read": true,
+            },
+            "waitingroom": Object {
               "edit": true,
               "read": true,
             },
@@ -129,11 +164,20 @@ Array [
               "edit": true,
               "read": true,
             },
+            "zaraz": Object {
+              "edit": true,
+              "publish": true,
+              "read": true,
+            },
             "zone": Object {
               "edit": true,
               "read": true,
             },
             "zone_settings": Object {
+              "edit": true,
+              "read": true,
+            },
+            "zone_versioning": Object {
               "edit": true,
               "read": true,
             },
@@ -153,16 +197,17 @@ Array [
     "_class": Array [
       "User",
     ],
-    "_key": "cloudflare_account_member:8024",
+    "_key": "cloudflare_account_member:e265512b21d07f6cf2c355a1a67d172f",
     "_rawData": Array [
       Object {
         "name": "default",
         "rawData": Object {
-          "id": "8024",
+          "api_access_enabled": null,
+          "id": "e265512b21d07f6cf2c355a1a67d172f",
           "roles": Array [
             Object {
               "description": "Can edit any Cloudflare setting, make purchases, update billing, and manage memberships. Super Administrators can revoke the access of other Super Administrators.",
-              "id": "f42f953d",
+              "id": "33666b9c79b9a5273fc7344ff42f953d",
               "name": "Super Administrator - All Privileges",
               "permissions": Object {
                 "access": Object {
@@ -185,11 +230,39 @@ Array [
                   "edit": true,
                   "read": true,
                 },
+                "blocks": Object {
+                  "edit": true,
+                  "read": true,
+                },
                 "cache_purge": Object {
                   "edit": true,
                   "read": false,
                 },
+                "dash_sso": Object {
+                  "edit": true,
+                  "read": true,
+                },
                 "dns_records": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "fbm": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "fbm_acc": Object {
+                  "edit": true,
+                  "read": false,
+                },
+                "healthchecks": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "http_applications": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "image": Object {
                   "edit": true,
                   "read": true,
                 },
@@ -202,6 +275,10 @@ Array [
                   "read": true,
                 },
                 "logs": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "magic": Object {
                   "edit": true,
                   "read": true,
                 },
@@ -227,9 +304,15 @@ Array [
                 },
                 "teams": Object {
                   "edit": true,
+                  "pii": true,
                   "read": true,
+                  "report": true,
                 },
                 "waf": Object {
+                  "edit": true,
+                  "read": true,
+                },
+                "waitingroom": Object {
                   "edit": true,
                   "read": true,
                 },
@@ -241,6 +324,11 @@ Array [
                   "edit": true,
                   "read": true,
                 },
+                "zaraz": Object {
+                  "edit": true,
+                  "publish": true,
+                  "read": true,
+                },
                 "zone": Object {
                   "edit": true,
                   "read": true,
@@ -249,14 +337,18 @@ Array [
                   "edit": true,
                   "read": true,
                 },
+                "zone_versioning": Object {
+                  "edit": true,
+                  "read": true,
+                },
               },
             },
           ],
           "status": "accepted",
           "user": Object {
-            "email": "user@company.com",
+            "email": "david.obregon@contractor.jupiterone.com",
             "first_name": null,
-            "id": "1f2e9956",
+            "id": "6cb57293541555d251de7f6a1f490420",
             "last_name": null,
             "two_factor_authentication_enabled": false,
           },
@@ -267,21 +359,21 @@ Array [
     "active": true,
     "admin": true,
     "createdOn": undefined,
-    "displayName": "user@company.com",
-    "email": "user@company.com",
+    "displayName": "david.obregon@contractor.jupiterone.com",
+    "email": "david.obregon@contractor.jupiterone.com",
     "firstName": null,
-    "id": "1f2e9956",
+    "id": "6cb57293541555d251de7f6a1f490420",
     "lastName": null,
-    "membershipId": "8024",
+    "membershipId": "e265512b21d07f6cf2c355a1a67d172f",
     "mfaEnabled": false,
     "name": "",
     "roles": Array [
-      "f42f953d",
+      "33666b9c79b9a5273fc7344ff42f953d",
     ],
     "status": "accepted",
     "superAdmin": true,
-    "userId": "1f2e9956",
-    "username": "user@company.com",
+    "userId": "6cb57293541555d251de7f6a1f490420",
+    "username": "david.obregon@contractor.jupiterone.com",
   },
 ]
 `;
@@ -290,25 +382,25 @@ exports[`should process account entities 2`] = `
 Array [
   Object {
     "_class": "HAS",
-    "_fromEntityKey": "cloudflare_account:209732935e34e48e396793c87747fb54",
-    "_key": "cloudflare_account:209732935e34e48e396793c87747fb54|has|cloudflare_account_role:05784afa30c1afe1440e79d9351c7430",
+    "_fromEntityKey": "cloudflare_account:cd12fd3d7190eff1985f713c47015663",
+    "_key": "cloudflare_account:cd12fd3d7190eff1985f713c47015663|has|cloudflare_account_role:05784afa30c1afe1440e79d9351c7430",
     "_toEntityKey": "cloudflare_account_role:05784afa30c1afe1440e79d9351c7430",
     "_type": "cloudflare_account_has_role",
     "displayName": "HAS",
   },
   Object {
     "_class": "HAS",
-    "_fromEntityKey": "cloudflare_account:209732935e34e48e396793c87747fb54",
-    "_key": "cloudflare_account:209732935e34e48e396793c87747fb54|has|cloudflare_account_member:8024",
-    "_toEntityKey": "cloudflare_account_member:8024",
+    "_fromEntityKey": "cloudflare_account:cd12fd3d7190eff1985f713c47015663",
+    "_key": "cloudflare_account:cd12fd3d7190eff1985f713c47015663|has|cloudflare_account_member:e265512b21d07f6cf2c355a1a67d172f",
+    "_toEntityKey": "cloudflare_account_member:e265512b21d07f6cf2c355a1a67d172f",
     "_type": "cloudflare_account_has_member",
     "displayName": "HAS",
   },
   Object {
     "_class": "ASSIGNED",
-    "_fromEntityKey": "cloudflare_account_member:8024",
-    "_key": "cloudflare_account_member:8024|assigned|cloudflare_account_role:f42f953d",
-    "_toEntityKey": "cloudflare_account_role:f42f953d",
+    "_fromEntityKey": "cloudflare_account_member:e265512b21d07f6cf2c355a1a67d172f",
+    "_key": "cloudflare_account_member:e265512b21d07f6cf2c355a1a67d172f|assigned|cloudflare_account_role:33666b9c79b9a5273fc7344ff42f953d",
+    "_toEntityKey": "cloudflare_account_role:33666b9c79b9a5273fc7344ff42f953d",
     "_type": "cloudflare_account_member_assigned_role",
     "displayName": "ASSIGNED",
   },

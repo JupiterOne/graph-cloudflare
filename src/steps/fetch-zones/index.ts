@@ -37,22 +37,33 @@ const step: IntegrationStep<IntegrationConfig> = {
         },
       });
       await jobState.addRelationship(accountZoneRelationship);
+      let zoneEntityIds: string[] = [];
+      if (zoneEntity.id && typeof zoneEntity.id === 'string') {
+        zoneEntityIds = [zoneEntity.id];
+      } else if (Array.isArray(zoneEntity.id)) {
+        zoneEntityIds = zoneEntity.id;
+      }
+      const iterateZoneRecordsPromises: Promise<void>[] = [];
+      zoneEntityIds.forEach((id) =>
+        iterateZoneRecordsPromises.push(
+          client.iterateZoneRecords(id, async (zoneRecord) => {
+            const recordEntity = convertRecord(zoneRecord);
+            await jobState.addEntity(recordEntity);
 
-      await client.iterateZoneRecords(zoneEntity.id, async (zoneRecord) => {
-        const recordEntity = convertRecord(zoneRecord);
-        await jobState.addEntity(recordEntity);
-
-        await jobState.addRelationship(
-          createDirectRelationship({
-            from: zoneEntity,
-            to: recordEntity,
-            _class: RelationshipClass.HAS,
-            properties: {
-              _type: Relationships.ZONE_HAS_RECORD._type,
-            },
+            await jobState.addRelationship(
+              createDirectRelationship({
+                from: zoneEntity,
+                to: recordEntity,
+                _class: RelationshipClass.HAS,
+                properties: {
+                  _type: Relationships.ZONE_HAS_RECORD._type,
+                },
+              }),
+            );
           }),
-        );
-      });
+        ),
+      );
+      await Promise.all(iterateZoneRecordsPromises);
     });
   },
 };

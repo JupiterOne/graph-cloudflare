@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.5 - 2023-02-15
+
+### Fixed
+
+- Fix RequestEntityTooLargeException by upgrading sdk packages
+
 ## 0.6.4 - 2021-10-08
 
 - Add logging to uncover `multipleResolves` issues

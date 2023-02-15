@@ -1,19 +1,13 @@
 import {
   createIntegrationEntity,
-  getTime,
+  parseTimePropertyValue,
   convertProperties,
+  Entity,
 } from '@jupiterone/integration-sdk-core';
-import {
-  Account,
-  // AccountMember, // error TS2589: Type instantiation is excessively deep and possibly infinite.
-  AccountRole,
-  Zone,
-  DNSRecord,
-} from '@cloudflare/types';
+import { Account, AccountRole, Zone, DNSRecord } from '@cloudflare/types';
+import { CloudflareAccountMember } from '../types';
 
-export const convertAccount = (
-  data: Account,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertAccount = (data: Account): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -29,14 +23,12 @@ export const convertAccount = (
         mfaEnabled: data.settings?.enforce_twofactor || undefined,
         mfaEnforced: data.settings?.enforce_twofactor,
         accessApprovalExpiry: data.settings?.access_approval_expiry,
-        createdOn: getTime(data.created_on),
+        createdOn: parseTimePropertyValue(data.created_on),
       },
     },
   });
 
-export const convertAccountMember = (
-  data: any,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertAccountMember = (data: CloudflareAccountMember): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -59,7 +51,7 @@ export const convertAccountMember = (
         mfaEnabled: data.user?.two_factor_authentication_enabled,
         status: data.status,
         active: data.status === 'accepted',
-        roles: data.roles?.map((role) => role.id),
+        roles: data.roles?.map((role) => `${role.id}`),
         admin: !!data.roles?.find(
           (role) =>
             typeof role.name === 'string' && role.name.match(/administrator/i),
@@ -72,9 +64,7 @@ export const convertAccountMember = (
     },
   });
 
-export const convertAccountRole = (
-  data: AccountRole,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertAccountRole = (data: AccountRole): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -91,9 +81,7 @@ export const convertAccountRole = (
     },
   });
 
-export const convertZone = (
-  data: Zone,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertZone = (data: Zone): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -112,17 +100,15 @@ export const convertZone = (
         ownerEmail: data.owner?.email,
         accountId: data.account?.id,
         accountName: data.account?.name,
-        activatedOn: getTime(data.activated_on),
-        createdOn: getTime(data.created_on),
-        modifiedOn: getTime(data.modified_on),
+        activatedOn: parseTimePropertyValue(data.activated_on),
+        createdOn: parseTimePropertyValue(data.created_on),
+        modifiedOn: parseTimePropertyValue(data.modified_on),
         owner: undefined,
       },
     },
   });
 
-export const convertRecord = (
-  data: DNSRecord,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertRecord = (data: DNSRecord): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -134,8 +120,8 @@ export const convertRecord = (
         _class: ['DomainRecord'],
         displayName: data.name,
         value: data.content,
-        createdOn: getTime(data.created_on),
-        modifiedOn: getTime(data.modified_on),
+        createdOn: parseTimePropertyValue(data.created_on),
+        modifiedOn: parseTimePropertyValue(data.modified_on),
         TTL: data.ttl || 0,
       },
     },
