@@ -4,13 +4,8 @@ import {
   convertProperties,
   Entity,
 } from '@jupiterone/integration-sdk-core';
-import {
-  Account,
-  AccountMember,
-  AccountRole,
-  Zone,
-  DNSRecord,
-} from '@cloudflare/types';
+import { Account, AccountRole, Zone, DNSRecord } from '@cloudflare/types';
+import { CloudflareAccountMember } from '../types';
 
 export const convertAccount = (data: Account): Entity =>
   createIntegrationEntity({
@@ -33,9 +28,7 @@ export const convertAccount = (data: Account): Entity =>
     },
   });
 
-export const convertAccountMember = (
-  data: Pick<AccountMember, 'id' | 'user' | 'status' | 'roles'>,
-): Entity =>
+export const convertAccountMember = (data: CloudflareAccountMember): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -58,7 +51,7 @@ export const convertAccountMember = (
         mfaEnabled: data.user?.two_factor_authentication_enabled,
         status: data.status,
         active: data.status === 'accepted',
-        roles: data.roles?.map((role) => role.id),
+        roles: data.roles?.map((role) => `${role.id}`),
         admin: !!data.roles?.find(
           (role) =>
             typeof role.name === 'string' && role.name.match(/administrator/i),
