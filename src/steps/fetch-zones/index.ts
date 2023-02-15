@@ -40,7 +40,7 @@ const step: IntegrationStep<IntegrationConfig> = {
       let zoneEntityIds: string[] = [];
       if (zoneEntity.id && typeof zoneEntity.id === 'string') {
         zoneEntityIds = [zoneEntity.id];
-      } else if (zoneEntity.id && typeof zoneEntity.id === 'object') {
+      } else if (Array.isArray(zoneEntity.id)) {
         zoneEntityIds = zoneEntity.id;
       }
       const iterateZoneRecordsPromises: Promise<void>[] = [];
