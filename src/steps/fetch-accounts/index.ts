@@ -73,17 +73,23 @@ const step: IntegrationStep<IntegrationConfig> = {
         );
 
         for (const role of member.roles) {
-          const memberRoleRelationship = createDirectRelationship({
-            toKey: `cloudflare_account_role:${role.id}`,
-            toType: 'cloudflare_account_role',
-            fromKey: memberEntity._key,
-            fromType: memberEntity._type,
-            _class: RelationshipClass.ASSIGNED,
-            properties: {
-              _type: Relationships.MEMBER_ASSIGNED_ROLE._type,
-            },
-          });
-          await jobState.addRelationship(memberRoleRelationship);
+          const roleEntity = await jobState.findEntity(
+            `cloudflare_account_role:${role.id}`,
+          );
+
+          if (roleEntity) {
+            const memberRoleRelationship = createDirectRelationship({
+              toKey: `cloudflare_account_role:${role.id}`,
+              toType: 'cloudflare_account_role',
+              fromKey: memberEntity._key,
+              fromType: memberEntity._type,
+              _class: RelationshipClass.ASSIGNED,
+              properties: {
+                _type: Relationships.MEMBER_ASSIGNED_ROLE._type,
+              },
+            });
+            await jobState.addRelationship(memberRoleRelationship);
+          }
         }
       });
     });

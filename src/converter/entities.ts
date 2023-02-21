@@ -39,8 +39,8 @@ export const convertAccountMember = (data: CloudflareAccountMember): Entity =>
         id: (data.user?.id || data.id) as string,
         userId: data.user?.id,
         membershipId: data.id,
-        firstName: data.user?.first_name,
-        lastName: data.user?.last_name,
+        firstName: data.user?.first_name || undefined,
+        lastName: data.user?.last_name || undefined,
         name:
           data.user?.first_name && data.user?.last_name
             ? `${data.user?.first_name} ${data.user?.first_name}`
