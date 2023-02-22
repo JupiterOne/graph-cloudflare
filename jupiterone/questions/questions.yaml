@@ -1,0 +1,4 @@
+---
+sourceId: managed:cloudflare
+integrationDefinitionId: '${integration_definition_id}'
+questions: []

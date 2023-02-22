@@ -68,14 +68,14 @@ test('should process zone entities', async () => {
     (e) => e._type === Entities.DNS_ZONE._type,
   );
   expect(zoneEntities).toMatchGraphObjectSchema({
-    _class: [Entities.DNS_ZONE._class],
+    _class: Entities.DNS_ZONE._class,
   });
 
   const recordEntities = collectedEntities.filter(
     (e) => e._type === Entities.DNS_RECORD._type,
   );
   expect(recordEntities).toMatchGraphObjectSchema({
-    _class: [Entities.DNS_RECORD._class],
+    _class: Entities.DNS_RECORD._class,
   });
 
   expect(collectedRelationships).toMatchDirectRelationshipSchema({});

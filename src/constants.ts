@@ -9,27 +9,37 @@ export const Entities = {
   ACCOUNT: {
     resourceName: 'Account',
     _type: 'cloudflare_account',
-    _class: 'Account',
+    _class: ['Account'],
   },
   MEMBER: {
     resourceName: 'Account Member',
     _type: 'cloudflare_account_member',
-    _class: 'User',
+    _class: ['User'],
+    properties: {
+      firstName: {
+        type: 'string',
+        nullable: true,
+      },
+      lastName: {
+        type: 'string',
+        nullable: true,
+      },
+    },
   },
   ROLE: {
     resourceName: 'Account Role',
     _type: 'cloudflare_account_role',
-    _class: 'AccessRole',
+    _class: ['AccessRole'],
   },
   DNS_ZONE: {
     resourceName: 'DNS Zone',
     _type: 'cloudflare_dns_zone',
-    _class: 'DomainZone',
+    _class: ['DomainZone'],
   },
   DNS_RECORD: {
     resourceName: 'DNS Record',
     _type: 'cloudflare_dns_record',
-    _class: 'DomainRecord',
+    _class: ['DomainRecord'],
   },
 };
 
