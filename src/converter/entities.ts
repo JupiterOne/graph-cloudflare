@@ -108,8 +108,10 @@ export const convertZone = (data: Zone): Entity =>
     },
   });
 
-export const convertRecord = (data: DNSRecord): Entity =>
-  createIntegrationEntity({
+export const convertRecord = (
+  data: DNSRecord,
+): { entity: Entity; tags: string[] } => {
+  const entity = createIntegrationEntity({
     entityData: {
       source: data,
       assign: {
@@ -126,3 +128,6 @@ export const convertRecord = (data: DNSRecord): Entity =>
       },
     },
   });
+  const tags = data.tags || [];
+  return { entity, tags };
+};

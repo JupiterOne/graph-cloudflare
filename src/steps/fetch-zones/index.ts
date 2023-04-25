@@ -1,4 +1,5 @@
 import {
+  assignTags,
   createDirectRelationship,
   IntegrationStep,
   RelationshipClass,
@@ -47,13 +48,14 @@ const step: IntegrationStep<IntegrationConfig> = {
       zoneEntityIds.forEach((id) =>
         iterateZoneRecordsPromises.push(
           client.iterateZoneRecords(id, async (zoneRecord) => {
-            const recordEntity = convertRecord(zoneRecord);
-            await jobState.addEntity(recordEntity);
+            const { entity, tags } = convertRecord(zoneRecord);
+            assignTags(entity, tags);
+            await jobState.addEntity(entity);
 
             await jobState.addRelationship(
               createDirectRelationship({
                 from: zoneEntity,
-                to: recordEntity,
+                to: entity,
                 _class: RelationshipClass.HAS,
                 properties: {
                   _type: Relationships.ZONE_HAS_RECORD._type,
