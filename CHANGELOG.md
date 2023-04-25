@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.6 - 2023-04-25
+
+- Add assign tags functionality for cloudflare DNS tags
+
 ## Changed
 
 - Upgraded SDK dependencies to v8
