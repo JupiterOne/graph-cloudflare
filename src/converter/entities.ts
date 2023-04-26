@@ -3,6 +3,7 @@ import {
   parseTimePropertyValue,
   convertProperties,
   Entity,
+  assignTags,
 } from '@jupiterone/integration-sdk-core';
 import { Account, AccountRole, Zone, DNSRecord } from '@cloudflare/types';
 import { CloudflareAccountMember } from '../types';
@@ -108,8 +109,8 @@ export const convertZone = (data: Zone): Entity =>
     },
   });
 
-export const convertRecord = (data: DNSRecord): Entity =>
-  createIntegrationEntity({
+export const convertRecord = (data: DNSRecord): Entity => {
+  const entity = createIntegrationEntity({
     entityData: {
       source: data,
       assign: {
@@ -126,3 +127,6 @@ export const convertRecord = (data: DNSRecord): Entity =>
       },
     },
   });
+  assignTags(entity, data.tags);
+  return entity;
+};
