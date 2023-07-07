@@ -105,11 +105,11 @@ export class ServicesClient {
       if (err.status == 403) {
         this.logger.warn(
           { accountId },
-          `Unable to query identity provider information for account due to missing permissions.  Skipping.`,
+          `Unable to query identity provider information for account.  Skipping.`,
         );
         this.logger.publishWarnEvent({
           name: IntegrationWarnEventName.MissingPermission,
-          description: `Unable to query identity provider information for account ${accountId} due to missing permissions.  Skipping.`,
+          description: `Unable to query identity provider information for account ${accountId}.  Skipping.`,
         });
       }
     }
