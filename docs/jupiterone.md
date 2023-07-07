@@ -109,6 +109,14 @@ The following relationships are created:
 | `cloudflare_account_member` | **ASSIGNED**          | `cloudflare_account_role`   |
 | `cloudflare_dns_zone`       | **HAS**               | `cloudflare_dns_record`     |
 
+### Mapped Relationships
+
+The following mapped relationships are created:
+
+| Source Entity `_type` | Relationship `_class` | Target Entity `_type`  | Direction |
+| --------------------- | --------------------- | ---------------------- | --------- |
+| `cloudflare_account`  | **CONNECTS**          | `*cloudflare_account*` | REVERSE   |
+
 <!--
 ********************************************************************************
 END OF GENERATED DOCUMENTATION AFTER BELOW MARKER
