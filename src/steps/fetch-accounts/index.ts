@@ -50,7 +50,9 @@ const step: IntegrationStep<IntegrationConfig> = {
           await jobState.addRelationship(
             createMappedRelationship({
               _class: RelationshipClass.CONNECTS,
-              _type: 'okta_application_connects_cloudflare_account',
+              _type:
+                MappedRelationships.OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT
+                  ._type,
               _mapping: {
                 sourceEntityKey: accountEntity._key,
                 relationshipDirection: RelationshipDirection.REVERSE,
