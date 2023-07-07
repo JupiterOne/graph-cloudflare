@@ -86,5 +86,6 @@ export const MappedRelationships = {
     _class: RelationshipClass.CONNECTS,
     targetType: Entities.ACCOUNT._type,
     direction: RelationshipDirection.REVERSE,
+    disableClassMatch: true,
   },
 };

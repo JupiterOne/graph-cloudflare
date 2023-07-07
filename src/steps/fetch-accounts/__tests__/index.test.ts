@@ -4,6 +4,7 @@ import {
   setupRecording,
 } from '@jupiterone/integration-sdk-testing';
 import { buildStepTestConfigForStep } from '../../../../test/config';
+import { MappedRelationships } from '../../../constants';
 
 let recording: Recording;
 
@@ -17,7 +18,7 @@ test('should process account entities', async () => {
     directory: __dirname,
     redactedRequestHeaders: ['api-token', 'X-Auth-Key', 'X-Auth-Email'],
     options: {
-      recordFailedRequests: false,
+      recordFailedRequests: true,
       matchRequestsBy: {
         url: {
           query: false,
@@ -28,5 +29,19 @@ test('should process account entities', async () => {
 
   const stepConfig = buildStepTestConfigForStep('fetch-accounts');
   const stepResult = await executeStepWithDependencies(stepConfig);
-  expect(stepResult).toMatchStepMetadata(stepConfig);
+  const directRelationships = stepResult.collectedRelationships.filter(
+    (r) =>
+      r._type !==
+      MappedRelationships.OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT._type,
+  );
+  const mappedRelationships = stepResult.collectedRelationships.filter(
+    (r) =>
+      r._type ===
+      MappedRelationships.OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT._type,
+  );
+  expect(stepResult.collectedEntities.length).toBeGreaterThan(0);
+  expect(directRelationships.length).toBeGreaterThan(0);
+  expect(mappedRelationships).toMatchGraphObjectSchema(
+    MappedRelationships.OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT,
+  );
 });

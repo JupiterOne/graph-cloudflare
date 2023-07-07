@@ -36,13 +36,13 @@
     "node-fetch": "^2.6.0"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.30.3"
+    "@jupiterone/integration-sdk-core": "^9.8.0"
   },
   "devDependencies": {
     "@cloudflare/types": "^6.21.2",
-    "@jupiterone/integration-sdk-core": "^8.30.3",
-    "@jupiterone/integration-sdk-dev-tools": "^8.30.3",
-    "@jupiterone/integration-sdk-testing": "^8.30.3",
+    "@jupiterone/integration-sdk-core": "^9.8.0",
+    "@jupiterone/integration-sdk-dev-tools": "^9.8.0",
+    "@jupiterone/integration-sdk-testing": "^9.8.0",
     "@types/node-fetch": "^2.0.0",
     "jest-fetch-mock": "^3.0.3",
     "wait-for-expect": "^3.0.2",
