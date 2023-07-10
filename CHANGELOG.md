@@ -1,3 +1,16 @@
+# v0.8.0 (Mon Jul 10 2023)
+
+#### 🚀 Enhancement
+
+- INT-8135 - Fixing node version for build and release step. [#52](https://github.com/JupiterOne/graph-cloudflare/pull/52) ([@adam-in-ict](https://github.com/adam-in-ict))
+- INT-8135 - Add mapped relationship to Okta applications [#51](https://github.com/JupiterOne/graph-cloudflare/pull/51) ([@adam-in-ict](https://github.com/adam-in-ict))
+
+#### Authors: 1
+
+- Adam Pierson ([@adam-in-ict](https://github.com/adam-in-ict))
+
+---
+
 ## 0.6.6 - 2023-04-25
 
 - Add assign tags functionality for cloudflare DNS tags
