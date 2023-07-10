@@ -1,12 +1,19 @@
 import {
   createDirectRelationship,
+  createMappedRelationship,
   IntegrationStep,
   RelationshipClass,
+  RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
 
 import { ServicesClient } from '../../client';
 import { IntegrationConfig } from '../../config';
-import { Entities, Relationships, Steps } from '../../constants';
+import {
+  Entities,
+  MappedRelationships,
+  Relationships,
+  Steps,
+} from '../../constants';
 import {
   convertAccount,
   convertAccountMember,
@@ -22,6 +29,9 @@ const step: IntegrationStep<IntegrationConfig> = {
     Relationships.ACCOUNT_HAS_ROLE,
     Relationships.MEMBER_ASSIGNED_ROLE,
   ],
+  mappedRelationships: [
+    MappedRelationships.OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT,
+  ],
   async executionHandler(context) {
     const { instance, logger, jobState } = context;
     const client = new ServicesClient({ config: instance.config, logger });
@@ -31,6 +41,32 @@ const step: IntegrationStep<IntegrationConfig> = {
     await client.iterateAccounts(async (account) => {
       const accountEntity = convertAccount(account);
       await jobState.addEntity(accountEntity);
+
+      await client.iterateIdentityProviders(account.id, async (provider) => {
+        // We need to create mapped relationships here.  We don't necessarily want to
+        // create entities for these identity providers and we may have more than one
+        // per account, so we can't just add the data to the account entity.
+        if (provider.type == 'okta') {
+          await jobState.addRelationship(
+            createMappedRelationship({
+              _class: RelationshipClass.CONNECTS,
+              _type:
+                MappedRelationships.OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT
+                  ._type,
+              _mapping: {
+                sourceEntityKey: accountEntity._key,
+                relationshipDirection: RelationshipDirection.REVERSE,
+                skipTargetCreation: true,
+                targetFilterKeys: [['_type', 'id']],
+                targetEntity: {
+                  _type: 'okta_application',
+                  id: provider.id,
+                },
+              },
+            }),
+          );
+        }
+      });
 
       await client.iterateAccountRoles(account.id, async (role) => {
         const roleEntity = convertAccountRole(role);

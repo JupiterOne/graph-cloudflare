@@ -8,11 +8,15 @@ import {
   DNSRecord,
   Zone,
 } from '@cloudflare/types';
-import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
+import {
+  IntegrationLogger,
+  IntegrationWarnEventName,
+} from '@jupiterone/integration-sdk-core';
 import { retry } from '@lifeomic/attempt';
 
 import { IntegrationConfig } from '../config';
 import { fatalRequestError, retryableRequestError } from './error';
+import { CloudflareIdentityProvider } from '../types';
 
 const BASE_URL = 'https://api.cloudflare.com/client/v4/';
 
@@ -82,6 +86,33 @@ export class ServicesClient {
     iteratee: CloudflareIteratee<DNSRecord>,
   ): Promise<void> {
     await this.iterateAll(`zones/${zoneId}/dns_records`, iteratee);
+  }
+
+  async iterateIdentityProviders(
+    accountId: string,
+    iteratee: CloudflareIteratee<CloudflareIdentityProvider>,
+  ): Promise<void> {
+    try {
+      // This doesn't need additional permissions currently, but if an account
+      // doesn't have ZeroTrust enabled and configured in Cloudflare, we'll get
+      // a 403 error.  Catching this so that customers who don't wish to use
+      // this feature won't be negatively impacted.
+      await this.iterateAll(
+        `accounts/${accountId}/access/identity_providers`,
+        iteratee,
+      );
+    } catch (err) {
+      if (err.status == 403) {
+        this.logger.warn(
+          { accountId },
+          `Unable to query identity provider information for account.  Skipping.`,
+        );
+        this.logger.publishWarnEvent({
+          name: IntegrationWarnEventName.MissingPermission,
+          description: `Unable to query identity provider information for account ${accountId}.  Skipping.`,
+        });
+      }
+    }
   }
 
   async validateInvocation(): Promise<boolean> {

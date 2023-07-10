@@ -1,4 +1,7 @@
-import { RelationshipClass } from '@jupiterone/integration-sdk-core';
+import {
+  RelationshipClass,
+  RelationshipDirection,
+} from '@jupiterone/integration-sdk-core';
 
 export const Steps = {
   ACCOUNT: 'fetch-accounts',
@@ -73,5 +76,16 @@ export const Relationships = {
     sourceType: Entities.DNS_ZONE._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.DNS_RECORD._type,
+  },
+};
+
+export const MappedRelationships = {
+  OKTA_APPLICATION_CONNECTS_CLOUDFLARE_ACCOUNT: {
+    _type: 'okta_application_connects_cloudflare_account',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.CONNECTS,
+    targetType: Entities.ACCOUNT._type,
+    direction: RelationshipDirection.REVERSE,
+    disableClassMatch: true,
   },
 };
