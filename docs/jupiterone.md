@@ -36,9 +36,11 @@ related configuration information.
 
 Configure the integration by providing an API Token with read-only permissions.
 
-- `organization:read` to list accounts, members, and roles
-- `zone:read` to list zones
-- `dns_records:read` to list records in a zone
+- `Account Settings:Read` to list accounts, members, and roles
+- `Zone:Read` to list zones
+- `DNS Firewall:Read` to list records in a zone
+- `Access: Organizations, Identity Providers, and Groups:Read` to list identity
+  provider information.
 
 Obtain an API token from the bottom of the ["API Tokens" page][2] in your
 Cloudflare account.
