@@ -1,3 +1,17 @@
+# v0.8.1 (Tue Sep 12 2023)
+
+#### 🐛 Bug Fix
+
+- INT-9168: fix duplicated key issue [#54](https://github.com/JupiterOne/graph-cloudflare/pull/54) ([@gastonyelmini](https://github.com/gastonyelmini))
+- INT-8135 - Scope Documentation Updates [#53](https://github.com/JupiterOne/graph-cloudflare/pull/53) ([@adam-in-ict](https://github.com/adam-in-ict))
+
+#### Authors: 2
+
+- Adam Pierson ([@adam-in-ict](https://github.com/adam-in-ict))
+- Gaston Yelmini ([@gastonyelmini](https://github.com/gastonyelmini))
+
+---
+
 # v0.8.0 (Mon Jul 10 2023)
 
 #### 🚀 Enhancement
