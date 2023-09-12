@@ -7,7 +7,11 @@ import {
 import { ServicesClient } from '../../client';
 import { IntegrationConfig } from '../../config';
 import { Entities, Relationships, Steps } from '../../constants';
-import { convertRecord, convertZone } from '../../converter';
+import {
+  convertRecord,
+  convertZone,
+  createDNSRecordKey,
+} from '../../converter';
 
 const step: IntegrationStep<IntegrationConfig> = {
   id: Steps.ZONES,
@@ -47,6 +51,7 @@ const step: IntegrationStep<IntegrationConfig> = {
       zoneEntityIds.forEach((id) =>
         iterateZoneRecordsPromises.push(
           client.iterateZoneRecords(id, async (zoneRecord) => {
+            if (jobState.hasKey(createDNSRecordKey(zoneRecord.id!))) return;
             const entity = convertRecord(zoneRecord);
             await jobState.addEntity(entity);
 

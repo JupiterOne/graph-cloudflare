@@ -109,6 +109,10 @@ export const convertZone = (data: Zone): Entity =>
     },
   });
 
+export const createDNSRecordKey = (dnsRecordId: string): string => {
+  return `cloudflare_dns_record:${dnsRecordId}`;
+};
+
 export const convertRecord = (data: DNSRecord): Entity => {
   const entity = createIntegrationEntity({
     entityData: {
@@ -116,7 +120,7 @@ export const convertRecord = (data: DNSRecord): Entity => {
       assign: {
         ...convertProperties(data),
         ...convertProperties(data.meta),
-        _key: `cloudflare_dns_record:${data.id}`,
+        _key: createDNSRecordKey(data.id!),
         _type: 'cloudflare_dns_record',
         _class: ['DomainRecord'],
         displayName: data.name,
